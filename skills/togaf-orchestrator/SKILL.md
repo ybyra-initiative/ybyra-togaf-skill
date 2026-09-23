@@ -19,6 +19,8 @@ For the full target directory specification, see [directory-spec.md](references/
 
 ## Pipeline Execution Workflow & Child Skill Delegation
 
+> **Private skills are loaded by file path**: the 8 phase skills plus `structurizr-dsl` and `c4-model` carry `disable-model-invocation: true` in their frontmatter — they never appear in the consumer's skill list and cannot be invoked through the Skill tool. To delegate to one, read it directly from disk (e.g., `.agents/skills/togaf-phase-a-vision/SKILL.md`, relative to the project root) and apply its instructions inline in the same conversation.
+
 ### Stage 1: Diagnosis & Baseline Discovery (`togaf-diagnose` + Phase A-D skills)
 - **Trigger**: New project initialization or baseline architecture capture.
 - **Child Skills Invoked**: `togaf-diagnose` runs the plain-language discovery interview and applies the 6 domain gate checks; per-phase files are written by `togaf-phase-a-vision`, `togaf-phase-b-business`, `togaf-phase-c-information`, and `togaf-phase-d-technology`.

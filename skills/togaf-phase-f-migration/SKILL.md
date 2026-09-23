@@ -2,6 +2,7 @@
 name: togaf-phase-f-migration
 description: Conducts Phase F Migration Planning, sequences work packages into projects with cost/risk charters and defines incremental Transition Architectures (TA-1, TA-2), generating two independent Phase F deliverables (migration-plan.md, transition-architectures.md). Use after Phase E proposal approval, when building the implementation roadmap.
 license: Apache-2.0
+disable-model-invocation: true
 metadata:
   author: R42 Architecture
   version: "2.0.0"

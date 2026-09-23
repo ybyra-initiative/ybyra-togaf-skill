@@ -2,6 +2,7 @@
 name: togaf-phase-g-governance
 description: Conducts Phase G Implementation Governance, drafts Architecture Contracts with compliance gates and dispensation workflow, and configures uniform agent harness rules (Mastra or Pi Agent) with CI/CD compliance hooks, generating two independent Phase G deliverables (architecture-contract.md, harness-execution-policy.md). Use when governing implementation compliance or setting up automated architecture checks.
 license: Apache-2.0
+disable-model-invocation: true
 metadata:
   author: R42 Architecture
   version: "2.0.0"

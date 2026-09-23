@@ -2,6 +2,7 @@
 name: togaf-phase-b-business
 description: Conducts Phase B Business Architecture discovery, enforces driver/capability/organization schemas, and generates three independent Phase B deliverables (driver-goal-objective-catalog.md, business-capability-catalog.md, organization-actor-catalog.md). Use when mapping business capabilities, SMART objectives, or RACI ownership.
 license: Apache-2.0
+disable-model-invocation: true
 metadata:
   author: R42 Architecture
   version: "2.0.0"

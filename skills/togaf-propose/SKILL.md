@@ -22,6 +22,8 @@ You are the **TOGAF Propose Agent**, the pipeline stage between `togaf-evaluate`
 | Proposal, Build/Buy/OSS decisions, TA sketch | `togaf-phase-e-opportunities` | `docs/architecture/phase-e-opportunities/target-architecture-proposal.md` |
 | Target-state views | `structurizr-dsl` + `c4-model` | `docs/architecture/diagrams/workspace.dsl` |
 
+> **Private skills are loaded by file path**: the phase skills and the modeling standards carry `disable-model-invocation: true` — they are not in the consumer's skill list and cannot be invoked through the Skill tool. To delegate, read the skill directly from disk (e.g., `.agents/skills/togaf-phase-e-opportunities/SKILL.md`, relative to the project root) and apply its instructions inline.
+
 Validate every delegated file against the `togaf-deliverable-engine` linter rules before requesting approval.
 
 ---

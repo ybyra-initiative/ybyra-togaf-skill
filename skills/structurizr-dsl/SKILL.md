@@ -2,6 +2,7 @@
 name: structurizr-dsl
 description: Generates, parses, and validates Structurizr DSL workspace definitions as the exclusive "models as code" language for C4 architecture diagrams. Replaces raw, ad-hoc diagramming syntax (like Mermaid) with a single, strongly-typed semantic model.
 license: Apache-2.0
+disable-model-invocation: true
 metadata:
   author: R42 Architecture
   version: "2.0.0"

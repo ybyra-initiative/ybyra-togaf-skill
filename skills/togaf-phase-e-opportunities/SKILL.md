@@ -2,6 +2,7 @@
 name: togaf-phase-e-opportunities
 description: Conducts Phase E Opportunities and Solutions analysis, enforces the Gap Analysis Matrix categories (New/Retained/Removed/Unintentional gap) and target-state proposal schemas, and generates two independent Phase E deliverables (gap-analysis-matrix.md, target-architecture-proposal.md). Use after baseline assessment, when proposing target architecture or candidate work packages.
 license: Apache-2.0
+disable-model-invocation: true
 metadata:
   author: R42 Architecture
   version: "2.0.0"

@@ -51,6 +51,8 @@ Once the Completeness Evaluation Gate passes, do **NOT** output a single monolit
 | C | `togaf-phase-c-information` | `application-portfolio-catalog.md`, `data-entity-catalog.md`, `application-data-crud-matrix.md`, `interface-catalog.md`, `application-interaction-matrix.md` |
 | D | `togaf-phase-d-technology` | `technology-standards-catalog.md`, `technology-portfolio-catalog.md`, `application-technology-matrix.md` |
 
+> **Private skills are loaded by file path**: the phase skills and the modeling standards carry `disable-model-invocation: true` — they are not in the consumer's skill list and cannot be invoked through the Skill tool. To delegate, read the skill directly from disk (e.g., `.agents/skills/togaf-phase-a-vision/SKILL.md`, relative to the project root) and apply its instructions inline. The same applies to `structurizr-dsl` and `c4-model`.
+
 Every emitted file MUST pass the `togaf-deliverable-engine` linter (Content Metamodel structure, no vague placeholders, complete columns).
 
 The baseline diagram MUST be generated as `docs/architecture/diagrams/workspace.dsl` containing a valid Structurizr DSL workspace with a System Context view. Delegate DSL syntax generation to the `structurizr-dsl` skill and C4 hierarchy validation to the `c4-model` skill. Standalone Mermaid (`.mmd`) diagrams are banned.

@@ -2,6 +2,7 @@
 name: togaf-phase-c-information
 description: Conducts Phase C Information Systems Architecture discovery, enforces App/Data/CRUD/Interface schemas, and generates five independent Phase C deliverables (application-portfolio-catalog.md, data-entity-catalog.md, application-data-crud-matrix.md, interface-catalog.md, application-interaction-matrix.md). Use when cataloging applications, data entities, CRUD ownership, or integration interfaces.
 license: Apache-2.0
+disable-model-invocation: true
 metadata:
   author: R42 Architecture
   version: "2.0.0"

@@ -2,6 +2,7 @@
 name: togaf-phase-a-vision
 description: Conducts Phase A Architecture Vision discovery, enforces vision/stakeholder/principles schemas, and generates three independent Phase A deliverables (architecture-vision.md, stakeholder-actor-map.md, principles-catalog.md). Use when initiating an Architecture Development cycle, capturing the sponsoring problem, or defining architecture principles.
 license: Apache-2.0
+disable-model-invocation: true
 metadata:
   author: R42 Architecture
   version: "2.0.0"

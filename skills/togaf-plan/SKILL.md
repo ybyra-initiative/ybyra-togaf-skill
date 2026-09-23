@@ -22,6 +22,8 @@ You are the **TOGAF Plan Agent**, the pipeline stage between `togaf-propose` and
 | Mandatory standards, compliance gates, dispensation | `togaf-phase-g-governance` | `docs/architecture/phase-g-governance/architecture-contract.md` |
 | Harness hooks (`lint_c4_diagrams`, contract checks) | `togaf-phase-g-governance` | `docs/architecture/phase-g-governance/harness-execution-policy.md` |
 
+> **Private skills are loaded by file path**: the phase skills and the modeling standards carry `disable-model-invocation: true` — they are not in the consumer's skill list and cannot be invoked through the Skill tool. To delegate, read the skill directly from disk (e.g., `.agents/skills/togaf-phase-f-migration/SKILL.md`, relative to the project root) and apply its instructions inline.
+
 Validate every delegated file against the `togaf-deliverable-engine` linter rules before requesting approval.
 
 ---

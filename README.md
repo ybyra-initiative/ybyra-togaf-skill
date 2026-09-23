@@ -35,6 +35,26 @@
 | `c4-model` | C4 abstraction framework enforcement (System Context, Container, Component, Code), hierarchy rules, tech/protocol annotations |
 | `structurizr-dsl` | Generation & validation of `workspace.dsl` — the single source of truth for all architectural views |
 
+## Skill Surfacing: Surfaced vs. Private Skills
+
+When you import this pack, **only 6 of the 16 skills appear in your agent's skill list**:
+
+**Surfaced (model-invocable):** `togaf-orchestrator`, `togaf-diagnose`, `togaf-evaluate`, `togaf-propose`, `togaf-plan`, `togaf-deliverable-engine`
+
+**Private (10):** the 8 `togaf-phase-*` skills plus `c4-model` and `structurizr-dsl`. Each carries this frontmatter flag:
+
+```yaml
+disable-model-invocation: true
+```
+
+This is a [Claude Code](https://code.claude.com/docs/en/skills) extension to the [Open Agent Skills Specification](https://agentskills.io/specification) (other spec-compliant clients simply ignore the unknown field). It removes the skill from the model's invocable list so your skill menu stays small — the pipeline skills load the private ones **explicitly, by reading their `SKILL.md` file path** (e.g., `.agents/skills/togaf-phase-a-vision/SKILL.md`), and the human user can still invoke them manually with `/togaf-phase-a-vision` if desired.
+
+To harden this on the consumer side (e.g., in `.claude/settings.json`), you can additionally turn skills off entirely:
+
+```json
+{ "skillOverrides": { "togaf-phase-*": "off", "c4-model": "off", "structurizr-dsl": "off" } }
+```
+
 ## Modeling Standard: C4 + Structurizr DSL (Mermaid Banned)
 
 All architectural diagrams in this package are defined as **code** using the [C4 model](https://c4model.com) abstractions expressed in [Structurizr DSL](https://docs.structurizr.com/dsl). A single `docs/architecture/diagrams/workspace.dsl` file is the **single source of truth** — a semantic model from which every view (System Context, Container, Component, Deployment) is generated, keeping naming, relationships, and abstraction levels consistent.

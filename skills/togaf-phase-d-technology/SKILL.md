@@ -2,6 +2,7 @@
 name: togaf-phase-d-technology
 description: Conducts Phase D Technology Architecture discovery and target-state definition, enforces technology standards/portfolio/matrix schemas, and generates three independent Phase D deliverables (technology-standards-catalog.md, technology-portfolio-catalog.md, application-technology-matrix.md). Use when defining TRM standards, cataloging infrastructure, or mapping applications to runtimes.
 license: Apache-2.0
+disable-model-invocation: true
 metadata:
   author: R42 Architecture
   version: "2.0.0"

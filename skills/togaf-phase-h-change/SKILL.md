@@ -2,6 +2,7 @@
 name: togaf-phase-h-change
 description: Conducts Phase H Architecture Change Management, triages change requests (Simplification / Incremental / Re-Architecting), updates the Architecture Repository, and produces operational hand-off documentation, generating two independent Phase H deliverables (architecture-change-log.md, operational-hand-off.md). Use for post-deployment monitoring, change triage, and hand-off packaging.
 license: Apache-2.0
+disable-model-invocation: true
 metadata:
   author: R42 Architecture
   version: "2.0.0"

@@ -2,6 +2,7 @@
 name: c4-model
 description: Defines and enforces the C4 model abstraction framework (System Context, Container, Component, Code) for software architecture modeling. Use to structure architectural views across TOGAF ADM phases without ad-hoc diagramming syntax.
 license: Apache-2.0
+disable-model-invocation: true
 metadata:
   author: R42 Architecture
   version: "2.0.0"

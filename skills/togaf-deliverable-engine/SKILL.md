@@ -62,7 +62,7 @@ Before approving or rendering any deliverable file, run this mandatory validatio
 ### Rule 3: Valid Structurizr DSL Syntax
 *   Architectural diagrams MUST be authored in Structurizr DSL (`workspace.dsl`) — standalone Mermaid/PlantUML/ad-hoc diagramming (`.mmd` files) is **banned** for primary architectural definitions.
 *   Structurizr DSL must compile cleanly via the Structurizr CLI: no floating containers, no missing technology annotations, and every relationship labeled with purpose and protocol.
-*   Delegate DSL syntax generation to the `structurizr-dsl` skill and C4 hierarchy validation to the `c4-model` skill.
+*   Delegate DSL syntax generation to the `structurizr-dsl` skill and C4 hierarchy validation to the `c4-model` skill. Both are private (`disable-model-invocation: true`) — not in the consumer's skill list and not invocable through the Skill tool, so read them directly from disk (`.agents/skills/structurizr-dsl/SKILL.md`, `.agents/skills/c4-model/SKILL.md`, relative to the project root) and apply their instructions inline.
 
 ### Rule 4: Explicit Data Provenance & Owners
 *   Every data entity in a catalog MUST list an explicit owning Application / Component (System of Record write owner).

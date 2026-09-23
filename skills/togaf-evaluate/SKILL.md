@@ -40,6 +40,8 @@ After grilling the architect and capturing operational realities, compile the of
 
 **File ownership**: `togaf-evaluate` compiles the matrix content below; the `togaf-phase-e-opportunities` skill owns writing it to `docs/architecture/phase-e-opportunities/gap-analysis-matrix.md` and validates it against the Phase E schema.
 
+> **Private skills are loaded by file path**: `togaf-phase-e-opportunities`, `structurizr-dsl`, and `c4-model` carry `disable-model-invocation: true` — they are not in the consumer's skill list and cannot be invoked through the Skill tool. To delegate, read the skill directly from disk (e.g., `.agents/skills/togaf-phase-e-opportunities/SKILL.md`, relative to the project root) and apply its instructions inline.
+
 ---
 
 ## Output Deliverable Schema (Markdown Format)
