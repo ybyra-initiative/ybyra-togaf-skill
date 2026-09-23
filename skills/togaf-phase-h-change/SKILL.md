@@ -95,7 +95,7 @@ Write **independent, standalone files** under `docs/architecture/phase-h-change/
 - Emit exactly the two Phase H files — never bundle governance contract content into them.
 - **Clear governance escalation**: never treat a Re-Architecting change as a simple patch; force generation of a new Request for Architecture Work.
 - **Clean hand-off**: all documentation self-contained and formatted for static site rendering.
-- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-h-change/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`) and embedded as exported SVGs in the owning document — standalone Mermaid (`.mmd`) diagrams are **banned**.
+- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-h-change/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`) and embedded as exported SVGs in the owning document (`![](./view.svg)`) — standalone Mermaid (`.mmd`) diagrams are **banned**.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---

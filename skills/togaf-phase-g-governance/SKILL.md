@@ -103,7 +103,7 @@ governance_rules:
 ## Guardrails
 - Emit exactly the two Phase G files — migration sequencing belongs to `togaf-phase-f-migration`.
 - **Harness uniformity**: do not allow mixing execution frameworks within the same project team.
-- **Contract enforcement**: rules must be explicit and machine-verifiable; the `lint_c4_diagrams` hook enforces the Structurizr DSL standard — standalone Mermaid (`.mmd`) diagrams are **banned**.
+- **Contract enforcement**: rules must be explicit and machine-verifiable; the `lint_c4_diagrams` hook enforces the Structurizr DSL standard (root `docs/architecture/workspace.dsl` + `!include` fragments, exported SVGs embedded as `![](./view.svg)`) — standalone Mermaid (`.mmd`) diagrams are **banned**.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---

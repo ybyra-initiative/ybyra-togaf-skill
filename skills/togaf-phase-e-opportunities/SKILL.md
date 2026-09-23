@@ -81,7 +81,7 @@ Extend this phase's `docs/architecture/phase-e-opportunities/views.dsl` fragment
 - Emit exactly the two Phase E files — Transition Architecture detail belongs to `togaf-phase-f-migration`.
 - **No big-bang**: proposals must contain at least one intermediate Transition Architecture sketch.
 - **Traceability**: every work package cites Gap IDs; every unintentional gap is resolved or escalated.
-- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-e-opportunities/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`) and embedded as exported SVGs in the owning document — standalone Mermaid (`.mmd`) diagrams are **banned**.
+- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-e-opportunities/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`) and embedded as exported SVGs in the owning document (`![](./view.svg)`) — standalone Mermaid (`.mmd`) diagrams are **banned**.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---

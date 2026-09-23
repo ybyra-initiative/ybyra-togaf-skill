@@ -141,7 +141,7 @@ workspace "Enterprise Architecture" "Composed from per-phase fragments via !incl
 - **Export** views from the composed workspace with the Structurizr `export` command:
   `export -workspace docs/architecture/workspace.dsl -format svg -output docs/architecture/` — see https://docs.structurizr.com/export. Validate structure with `-format json`.
 - **Embed** each exported SVG in the Markdown document that owns it: `![System Context](./system-context.svg)` (SVG colocated with the `.md`). This renders natively in VS Code's Markdown preview and on GitHub — no extension or plugin required. Exported SVGs are committed to the repository (Docs-as-Code) and MUST be regenerated after any DSL edit — never hand-edited.
-- **Interactive preview**: the `local` command (successor to the EOL Structurizr Lite) serves the workspace locally — https://docs.structurizr.com/local.
+- **Interactive preview**: the `local` command (successor to the discontinued Lite tooling) serves the workspace locally — https://docs.structurizr.com/local.
 - **VS Code authoring preview**: recommend `vimpelcom.c4-varp` (live DSL webview preview with `!include` support) plus `ciarant.vscode-structurizr` (syntax highlighting). Avoid `systemticks.c4-dsl-extension` — it uploads the model to the public kroki.io service.
 
 ---
