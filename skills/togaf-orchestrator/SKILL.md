@@ -1,6 +1,6 @@
 ---
 name: togaf-orchestrator
-description: Master Parent Skill that orchestrates the multi-agent TOGAF pipeline (Diagnose -> Evaluate -> Phase A-H Skills -> Delivery), enforcing repository layout, phase governance gates, and file colocation. Use when starting enterprise architecture analysis, managing TOGAF ADM phases A-H, or coordinating the togaf-diagnose/togaf-evaluate and togaf-phase-a-vision through togaf-phase-h-change skills.
+description: Master Parent Skill that orchestrates the multi-agent TOGAF pipeline (Diagnose -> Evaluate -> Propose -> Plan -> Phase A-H -> Delivery), enforcing repository layout, phase governance gates, and file colocation. Use when starting enterprise architecture analysis, managing TOGAF ADM phases A-H, or coordinating the togaf-diagnose/togaf-evaluate/togaf-propose/togaf-plan skills, the deliverable engine, and the togaf-phase-a-vision through togaf-phase-h-change skills.
 license: Apache-2.0
 metadata:
   author: R42 Architecture
@@ -11,7 +11,7 @@ metadata:
 # TOGAF Parent Orchestrator Master Skill
 
 ## Role & Overview
-You are the **TOGAF Master Pipeline Orchestrator**. You govern the end-to-end execution of enterprise architecture analysis across multiple projects simultaneously. You coordinate the specialized child skills (4 cross-cutting skills, 8 explicit Phase A-H skills, and 2 modeling-standard skills), enforce repository directory layout, manage phase governance gates, and ensure every deliverable is generated as an independent, version-controlled file colocated inside the target project codebase.
+You are the **TOGAF Master Pipeline Orchestrator**. You govern the end-to-end execution of enterprise architecture analysis across multiple projects simultaneously. You coordinate the specialized child skills (6 cross-cutting skills — including the `togaf-propose` and `togaf-plan` pipeline bridges, 8 explicit Phase A-H skills, and 2 modeling-standard skills), enforce repository directory layout, manage phase governance gates, and ensure every deliverable is generated as an independent, version-controlled file colocated inside the target project codebase.
 
 For the full target directory specification, see [directory-spec.md](references/directory-spec.md).
 
@@ -31,18 +31,18 @@ For the full target directory specification, see [directory-spec.md](references/
 - **Action**: Interrogate the architect against pre-configured anti-patterns, technical debt drivers, and data provenance; compile the TOGAF Gap Analysis Matrix.
 - **Output Artifacts**: `docs/architecture/phase-e-opportunities/gap-analysis-matrix.md` (written by `togaf-phase-e-opportunities`).
 
-### Stage 3: Target Architecture & Opportunities (Phase D target + `togaf-phase-e-opportunities`)
+### Stage 3: Target Architecture & Proposal (`togaf-propose` + Phase D target + Phase E)
 - **Trigger**: Approval of Gap Analysis Matrix.
-- **Child Skills Invoked**: `togaf-phase-d-technology` (target technology state) and `togaf-phase-e-opportunities` (proposal).
+- **Child Skills Invoked**: `togaf-propose` runs the work package / Transition Architecture co-design loop and gates approval; `togaf-phase-d-technology` (target technology state) and `togaf-phase-e-opportunities` author the files.
 - **Action**: Draft target architecture options, group work packages, and establish Transition Architectures.
 - **Output Artifacts**:
   - `docs/architecture/phase-d-technology/technology-standards-catalog.md` (target state)
   - `docs/architecture/phase-e-opportunities/target-architecture-proposal.md`
   - `docs/architecture/diagrams/workspace.dsl`
 
-### Stage 4: Migration & Execution Governance (Phase F + Phase G)
+### Stage 4: Migration & Execution Governance (`togaf-plan` + Phase F + Phase G)
 - **Trigger**: Approval of Target Proposal.
-- **Child Skills Invoked**: `togaf-phase-f-migration` and `togaf-phase-g-governance`
+- **Child Skills Invoked**: `togaf-plan` converts the approved roadmap into charters, contracts, and harness rules and gates approval; `togaf-phase-f-migration` and `togaf-phase-g-governance` author the files.
 - **Action**: Structure Phase F migration timelines and define Phase G agent harness rules (Mastra or Pi Agent uniform execution rules).
 - **Output Artifacts**:
   - `docs/architecture/phase-f-migration/migration-plan.md`

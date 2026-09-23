@@ -76,6 +76,8 @@ const EXPECTED_SKILLS = [
   "togaf-orchestrator",
   "togaf-diagnose",
   "togaf-evaluate",
+  "togaf-propose",
+  "togaf-plan",
   "togaf-deliverable-engine",
   "togaf-phase-a-vision",
   "togaf-phase-b-business",

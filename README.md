@@ -1,6 +1,6 @@
 # TOGAF Agent Skills
 
-[Open Agent Skills Spec](https://agentskills.io/specification)-compliant package of **14 specialized Agent Skills** managing enterprise architecture analysis across **TOGAF ADM Phases A through H**, using the **C4 model + Structurizr DSL** as the exclusive architecture modeling standard. All deliverables follow a **Docs-as-Code** philosophy — plain-text Markdown and a single `workspace.dsl` model colocated inside your project's Git repository.
+[Open Agent Skills Spec](https://agentskills.io/specification)-compliant package of **16 specialized Agent Skills** managing enterprise architecture analysis across **TOGAF ADM Phases A through H**, using the **C4 model + Structurizr DSL** as the exclusive architecture modeling standard. All deliverables follow a **Docs-as-Code** philosophy — plain-text Markdown and a single `workspace.dsl` model colocated inside your project's Git repository.
 
 ## Included Skills
 
@@ -11,6 +11,8 @@
 | `togaf-orchestrator` | Master Pipeline Orchestrator: execution lifecycle, directory boundaries, phase governance gates |
 | `togaf-diagnose` | Plain-language stakeholder discovery across Phases A–D, enforcing 6 completeness gate checks before delegating baseline files to phase skills |
 | `togaf-evaluate` | Adversarial critique agent: grilling protocol, data provenance audits, Gap Analysis Matrix findings |
+| `togaf-propose` | Pipeline stage after `togaf-evaluate`: groups gaps into Work Packages, formulates Transition Architectures, runs the co-design loop; delegates proposal files to phase D/E skills |
+| `togaf-plan` | Pipeline stage after `togaf-propose`: cost/risk assessment, Architecture Contracts, harness uniformization; delegates plan files to phase F/G skills |
 | `togaf-deliverable-engine` | Writing quality enforcement against the TOGAF Content Metamodel (Catalogs, Matrices, Diagrams) — linter Rules 1–4 + template composers |
 
 ### Explicit TOGAF ADM Phase Skills (A–H)
@@ -47,7 +49,7 @@ All architectural diagrams in this package are defined as **code** using the [C4
 npx github:ybyra-initiative/ybyra-togaf-skill
 ```
 
-This copies all 14 skills into `./.agents/skills/` in your project.
+This copies all 16 skills into `./.agents/skills/` in your project.
 
 ### Git Submodule Workflow (Recommended for Private Repos)
 
@@ -69,7 +71,7 @@ npx github:ybyra-initiative/ybyra-togaf-skill --update --force   # overwrite loc
 
 | Command / Flag | Description |
 |---|---|
-| *(default)*, `--update` | Install / sync skills from the repo into `./.agents/skills/` (validated against the canonical 14-skill pack) |
+| *(default)*, `--update` | Install / sync skills from the repo into `./.agents/skills/` (validated against the canonical 16-skill pack) |
 | `--sync-back`, `-s` | Copy modified skills from `./.agents/skills/` back into the repo clone, show diff summary, and print PR staging instructions |
 | `--force`, `-f` | Bypass collision checks and overwrite |
 | `--dry-run` | Validate paths and skill pack structure without writing files |
@@ -137,7 +139,7 @@ docs/architecture/
 
 ## Development
 
-- `npm test` runs `node cli.js --dry-run` (validates the 14-skill pack structure and install paths).
+- `npm test` runs `node cli.js --dry-run` (validates the 16-skill pack structure and install paths).
 
 ## References & Industry Standards
 
