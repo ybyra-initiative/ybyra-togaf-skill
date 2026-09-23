@@ -1,0 +1,16 @@
+{
+  "name": "togaf-agent-skills",
+  "version": "2.0.0",
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ybyra-initiative/ybyra-togaf-skill.git"
+  },
+  "bin": {
+    "togaf-skills": "./cli.js"
+  },
+  "scripts": {
+    "test": "node cli.js --dry-run"
+  }
+}
