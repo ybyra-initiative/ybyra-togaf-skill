@@ -38,7 +38,7 @@ Present work packages to the human architect to refine boundaries/priorities and
 2. Every **Unintentional Gap** has a resolution or escalation note before work packages reference it.
 3. Every work package references concrete **Gap IDs** it resolves (traceability both directions: no orphan gaps, no unreferenced work packages).
 4. Build/buy proposals state alternatives considered and the deciding factor.
-5. Diagrams are workspace.dsl extensions only — standalone Mermaid `.mmd` is **banned**.
+5. Diagrams are this phase's `views.dsl` fragment extensions (composed by `docs/architecture/workspace.dsl`) only — standalone Mermaid `.mmd` is **banned**.
 
 ---
 
@@ -72,7 +72,7 @@ Write **independent, standalone files** under `docs/architecture/phase-e-opportu
 - **TA-1**: quick wins & foundations → **TA-2**: core migration → **Target State** (formalized in `togaf-phase-f-migration`).
 
 ## 4. Target-State Diagram Extension
-Extend `docs/architecture/diagrams/workspace.dsl` with target-state container views — delegate DSL syntax to the `structurizr-dsl` skill and hierarchy checks to the `c4-model` skill.
+Extend this phase's `docs/architecture/phase-e-opportunities/views.dsl` fragment (composed by `docs/architecture/workspace.dsl`, embedded as exported SVGs) with target-state container views — delegate DSL syntax to the `structurizr-dsl` skill and hierarchy checks to the `c4-model` skill.
 ```
 
 ---
@@ -81,7 +81,7 @@ Extend `docs/architecture/diagrams/workspace.dsl` with target-state container vi
 - Emit exactly the two Phase E files — Transition Architecture detail belongs to `togaf-phase-f-migration`.
 - **No big-bang**: proposals must contain at least one intermediate Transition Architecture sketch.
 - **Traceability**: every work package cites Gap IDs; every unintentional gap is resolved or escalated.
-- Architecture visualization is authored only in `docs/architecture/diagrams/workspace.dsl` — standalone Mermaid (`.mmd`) diagrams are **banned**.
+- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-e-opportunities/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`) and embedded as exported SVGs in the owning document — standalone Mermaid (`.mmd`) diagrams are **banned**.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---

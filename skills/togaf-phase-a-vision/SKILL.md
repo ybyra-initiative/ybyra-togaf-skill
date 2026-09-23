@@ -31,7 +31,7 @@ You are the **TOGAF Phase A Architecture Vision Agent**. Your objective is to es
 2. Every stakeholder row has a Power/Interest quadrant assignment, decision authority, and at least one explicit concern.
 3. Every principle has all four fields (Name, Statement, Rationale, Implications) — no empty cells.
 4. Every fact is traceable: mark `Source: [Interview | Document | Assumed]` per section.
-5. All diagrams go to `docs/architecture/diagrams/workspace.dsl` (System Context view) — standalone Mermaid `.mmd` is **banned**.
+5. All diagrams go to this phase's `docs/architecture/phase-a-vision/views.dsl` (+ `model.dsl` for newly introduced elements), composed by `docs/architecture/workspace.dsl`, and are embedded in the owning document as exported SVGs (`![](./view.svg)`) (System Context view) — standalone Mermaid `.mmd` is **banned**.
 
 ---
 
@@ -73,7 +73,7 @@ Quadrants: `High Power/High Interest`, `High Power/Low Interest`, `Low Power/Hig
 ## Guardrails
 - Emit exactly the three Phase A files above — never bundle Phase B+ content into them.
 - KPIs without a target number and date are rejected by the linter.
-- Architecture visualization is authored only in `docs/architecture/diagrams/workspace.dsl` (C4/Structurizr DSL) — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate syntax to the `structurizr-dsl` skill and hierarchy checks to the `c4-model` skill.
+- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-a-vision/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`) and embedded as exported SVGs in the owning document (C4/Structurizr DSL) — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate syntax to the `structurizr-dsl` skill and hierarchy checks to the `c4-model` skill.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---

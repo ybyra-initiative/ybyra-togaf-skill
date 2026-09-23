@@ -44,7 +44,7 @@ Generate formal **Architecture Contracts** between the Architecture Board and im
 ### Step 3: Agent Harness Uniformization Rules (Mastra / Pi Agent)
 1. **Uniform Workflow Engine**: select either **Mastra** or **Pi Agent** as the standard team harness; do not mix frameworks within one project team.
 2. **Automated Compliance Hooks**:
-   - `pre-commit` → `lint_c4_diagrams` (validates `workspace.dsl`, never Mermaid).
+   - `pre-commit` → `lint_c4_diagrams` (validates `docs/architecture/workspace.dsl` and its `!include` fragments, never Mermaid).
    - `pull_request` → `verify_contract_compliance` (evaluates PRs against the Architecture Contract).
 
 ### Step 4: Delegate Authoring & Approval Gate
@@ -67,7 +67,7 @@ Generate formal **Architecture Contracts** between the Architecture Board and im
 - **Contract Enforcement**: Architecture Contracts must be explicit, measurable, and machine-verifiable where possible.
 - **Traceability**: every project charter MUST link to approved WP IDs; every contract rule MUST link to a `TS-xx` standard or Gap ID.
 - **File Independence**: each deliverable is an independent Markdown file written by its owning phase skill — no monolithic plan document.
-- **Single Source of Truth**: roadmap and sequencing diagrams are Structurizr DSL extensions in `workspace.dsl`. Hand-authored Mermaid is banned; delegate DSL syntax to `structurizr-dsl` and C4 hierarchy validation to `c4-model`.
+- **Single Source of Truth**: roadmap and sequencing diagrams are Structurizr DSL extensions in the plan phase's `views.dsl` fragment (composed by `docs/architecture/workspace.dsl`, embedded as exported SVGs). Hand-authored Mermaid is banned; delegate DSL syntax to `structurizr-dsl` and C4 hierarchy validation to `c4-model`.
 
 ---
 

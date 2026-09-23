@@ -42,7 +42,7 @@ Compile a clean, self-contained hand-off package for operational teams, executiv
 2. Every **Re-Architecting** row triggers a Request for Architecture Work section — missing RAF rejected.
 3. Compliance audit section lists deployment status, operational health metrics, and active dispensations (or explicit "None").
 4. Repository update log is checklist-complete (baseline ADD, ABBs, lessons learned).
-5. Hand-off references diagrams only via `docs/architecture/diagrams/workspace.dsl` — standalone Mermaid `.mmd` is **banned**.
+5. Hand-off references diagrams only via the phase DSL fragments composed by `docs/architecture/workspace.dsl` (embedded as exported SVGs in the owning documents) — standalone Mermaid `.mmd` is **banned**.
 
 ---
 
@@ -95,7 +95,7 @@ Write **independent, standalone files** under `docs/architecture/phase-h-change/
 - Emit exactly the two Phase H files — never bundle governance contract content into them.
 - **Clear governance escalation**: never treat a Re-Architecting change as a simple patch; force generation of a new Request for Architecture Work.
 - **Clean hand-off**: all documentation self-contained and formatted for static site rendering.
-- Architecture visualization is authored only in `docs/architecture/diagrams/workspace.dsl` — standalone Mermaid (`.mmd`) diagrams are **banned**.
+- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-h-change/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`) and embedded as exported SVGs in the owning document — standalone Mermaid (`.mmd`) diagrams are **banned**.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---

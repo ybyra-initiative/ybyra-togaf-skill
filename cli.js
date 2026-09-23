@@ -71,13 +71,14 @@ function resolveSource() {
   process.exit(1);
 }
 
-/** Canonical pack: 4 cross-cutting + 8 TOGAF ADM phase skills + 2 modeling standards. */
+/** Canonical pack: 7 cross-cutting + 8 TOGAF ADM phase skills + 2 modeling standards. */
 const EXPECTED_SKILLS = [
   "togaf-orchestrator",
   "togaf-diagnose",
   "togaf-evaluate",
   "togaf-propose",
   "togaf-plan",
+  "togaf-agentic-governance",
   "togaf-deliverable-engine",
   "togaf-phase-a-vision",
   "togaf-phase-b-business",

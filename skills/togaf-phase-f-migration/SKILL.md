@@ -81,7 +81,7 @@ Write **independent, standalone files** under `docs/architecture/phase-f-migrati
 - Emit exactly the two Phase F files — contracts and harness policies belong to `togaf-phase-g-governance`.
 - **No big-bang**: at least one intermediate Transition Architecture before the target state.
 - Every work package keeps its Gap ID traceability from Phase E through to the TA that delivers it.
-- Architecture visualization is authored only in `docs/architecture/diagrams/workspace.dsl` (TA views via DSL styles) — standalone Mermaid (`.mmd`) diagrams are **banned**.
+- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-f-migration/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`, TA views via DSL styles) and embedded as exported SVGs in the owning document — standalone Mermaid (`.mmd`) diagrams are **banned**.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---

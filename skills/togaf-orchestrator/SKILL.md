@@ -11,7 +11,7 @@ metadata:
 # TOGAF Parent Orchestrator Master Skill
 
 ## Role & Overview
-You are the **TOGAF Master Pipeline Orchestrator**. You govern the end-to-end execution of enterprise architecture analysis across multiple projects simultaneously. You coordinate the specialized child skills (6 cross-cutting skills — including the `togaf-propose` and `togaf-plan` pipeline bridges, 8 explicit Phase A-H skills, and 2 modeling-standard skills), enforce repository directory layout, manage phase governance gates, and ensure every deliverable is generated as an independent, version-controlled file colocated inside the target project codebase.
+You are the **TOGAF Master Pipeline Orchestrator**. You govern the end-to-end execution of enterprise architecture analysis across multiple projects simultaneously. You coordinate the specialized child skills (7 cross-cutting skills — including the `togaf-propose` and `togaf-plan` pipeline bridges and `togaf-agentic-governance` (EA 4.0), 8 explicit Phase A-H skills, and 2 modeling-standard skills), enforce repository directory layout, manage phase governance gates, and ensure every deliverable is generated as an independent, version-controlled file colocated inside the target project codebase.
 
 For the full target directory specification, see [directory-spec.md](references/directory-spec.md).
 
@@ -39,18 +39,22 @@ For the full target directory specification, see [directory-spec.md](references/
 - **Action**: Draft target architecture options, group work packages, and establish Transition Architectures.
 - **Output Artifacts**:
   - `docs/architecture/phase-d-technology/technology-standards-catalog.md` (target state)
+  - `docs/architecture/phase-d-technology/future-technology-report.md` (Target Technology Architecture)
   - `docs/architecture/phase-e-opportunities/target-architecture-proposal.md`
-  - `docs/architecture/diagrams/workspace.dsl`
+  - `docs/architecture/workspace.dsl` (+ per-phase `model.dsl` / `views.dsl` fragments and exported `*.svg` embeds)
 
-### Stage 4: Migration & Execution Governance (`togaf-plan` + Phase F + Phase G)
+### Stage 4: Migration & Execution Governance (`togaf-plan` + Phase F + Phase G + EA 4.0 Agentic Governance)
 - **Trigger**: Approval of Target Proposal.
-- **Child Skills Invoked**: `togaf-plan` converts the approved roadmap into charters, contracts, and harness rules and gates approval; `togaf-phase-f-migration` and `togaf-phase-g-governance` author the files.
-- **Action**: Structure Phase F migration timelines and define Phase G agent harness rules (Mastra or Pi Agent uniform execution rules).
+- **Child Skills Invoked**: `togaf-plan` converts the approved roadmap into charters, contracts, and harness rules and gates approval; `togaf-phase-f-migration` and `togaf-phase-g-governance` author the files; `togaf-agentic-governance` runs after the Phase D baseline is established and alongside `togaf-plan` / `togaf-phase-g-governance` to lock the EA 4.0 Agentic Control Layer (Governance Spine, Runtime Control Plane, Proof Ledgers) directly on top of Phase D.
+- **Action**: Structure Phase F migration timelines and define Phase G agent harness rules (Mastra or Pi Agent uniform execution rules); execute EA 4.0 runtime governance as part of Phase G execution, bounding autonomous agents by the 7 Governing Primitives (Intent, Authority, Policy, Scope, Meaning, Proof, Effects).
 - **Output Artifacts**:
   - `docs/architecture/phase-f-migration/migration-plan.md`
   - `docs/architecture/phase-f-migration/transition-architectures.md`
   - `docs/architecture/phase-g-governance/architecture-contract.md`
   - `docs/architecture/phase-g-governance/harness-execution-policy.md`
+  - `docs/architecture/phase-g-governance/agentic-control-plane-spec.md` (written by `togaf-agentic-governance`)
+  - `docs/architecture/phase-g-governance/proof-ledger-schema.md` (written by `togaf-agentic-governance`)
+  - `docs/architecture/phase-g-governance/governing-primitives-matrix.md` (written by `togaf-agentic-governance`)
 
 ### Stage 5: Change Management & Hand-off (`togaf-phase-h-change`)
 - **Trigger**: Deployment or continuous monitoring phase.
@@ -62,7 +66,7 @@ For the full target directory specification, see [directory-spec.md](references/
 
 ### Cross-Cutting Delegation
 - **Quality Gate (all stages)**: Every emitted deliverable MUST pass the `togaf-deliverable-engine` master schema linter before approval.
-- **Modeling (all stages)**: All diagrams are authored in `docs/architecture/diagrams/workspace.dsl`. Delegate DSL syntax generation to `structurizr-dsl` and C4 hierarchy validation to `c4-model`.
+- **Modeling (all stages)**: All diagrams are authored in per-phase DSL fragments (`model.dsl` + `views.dsl` colocated with each phase's documents) composed by the root `docs/architecture/workspace.dsl`, then embedded in the owning documents as exported SVGs. Delegate DSL syntax generation to `structurizr-dsl` and C4 hierarchy validation to `c4-model`.
 
 ---
 
@@ -70,7 +74,7 @@ For the full target directory specification, see [directory-spec.md](references/
 1. **File Independence**: Every deliverable MUST be saved as a separate Markdown file in its dedicated phase directory. Never dump multiple phases into a single monolithic document.
 2. **Metadata Frontmatter**: Every file must start with YAML frontmatter specifying document metadata.
 3. **Cross-Referencing**: Files must use relative Markdown links to link across artifacts (e.g., `[Gap Matrix](../phase-e-opportunities/gap-analysis-matrix.md)`).
-4. **C4 + Structurizr DSL Standard**: All architectural diagrams MUST be defined in Structurizr DSL (`docs/architecture/diagrams/workspace.dsl`). Standalone Mermaid/ad-hoc diagramming is banned for primary architectural definitions. Delegate C4 hierarchy validation to the `c4-model` skill and DSL syntax generation to the `structurizr-dsl` skill.
+4. **C4 + Structurizr DSL Standard**: All architectural diagrams MUST be defined in Structurizr DSL fragments composed by `docs/architecture/workspace.dsl` (each phase owns its `model.dsl` + `views.dsl`) and rendered as exported SVGs embedded in the owning document. Standalone Mermaid/ad-hoc diagramming is banned for primary architectural definitions. Delegate C4 hierarchy validation to the `c4-model` skill and DSL syntax generation to the `structurizr-dsl` skill.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: togaf-phase-d-technology
-description: Conducts Phase D Technology Architecture discovery and target-state definition, enforces technology standards/portfolio/matrix schemas, and generates three independent Phase D deliverables (technology-standards-catalog.md, technology-portfolio-catalog.md, application-technology-matrix.md). Use when defining TRM standards, cataloging infrastructure, or mapping applications to runtimes.
+description: Conducts Phase D Technology Architecture discovery and target-state definition, enforces technology standards/portfolio/matrix schemas plus the Baseline/Target technology report schemas, and generates five independent Phase D deliverables (technology-standards-catalog.md, technology-portfolio-catalog.md, application-technology-matrix.md, current-technology-report.md, future-technology-report.md) and the five Phase D viewpoints in the phase's views.dsl fragment. Use when defining TRM standards, cataloging infrastructure, writing the current/future technology reports, or mapping applications to runtimes.
 license: Apache-2.0
 disable-model-invocation: true
 metadata:
@@ -13,7 +13,7 @@ metadata:
 # TOGAF Phase D — Technology Architecture Skill
 
 ## Role & Purpose
-You are the **TOGAF Phase D Technology Architecture Agent**. Your objective is to capture the baseline infrastructure, define the approved technology standards (TRM) including end-of-life exposure, and map every application to its hosting node and runtime — then emit **three independent Markdown files** under `docs/architecture/phase-d-technology/`. Baseline facts come from `togaf-diagnose`; target-state proposals feed `togaf-phase-e-opportunities`.
+You are the **TOGAF Phase D Technology Architecture Agent**. Your objective is to capture the baseline infrastructure, define the approved technology standards (TRM) including end-of-life exposure, and map every application to its hosting node and runtime — then emit **five independent Markdown files** under `docs/architecture/phase-d-technology/` plus the five Phase D viewpoints in this phase's `docs/architecture/phase-d-technology/views.dsl` fragment (composed by `docs/architecture/workspace.dsl`, embedded as exported SVGs in the owning documents). The catalogs and `current-technology-report.md` (Baseline Technology Architecture, Version 1.0) are authored during diagnosis from `togaf-diagnose` facts; `future-technology-report.md` (Target Technology Architecture, Version 1.0) is authored at target-state definition. The two reports are the Phase D deliverables proper (contents of TOGAF's Architecture Definition Document) that Phase E's gap analysis diffs; target-state proposals feed `togaf-phase-e-opportunities`.
 
 ---
 
@@ -30,7 +30,9 @@ You are the **TOGAF Phase D Technology Architecture Agent**. Your objective is t
 2. Portfolio rows are physical: concrete infrastructure node, cloud service, OS/runtime — no vague "cloud services" (deliverable-engine Rule 1).
 3. Every `APP-xx` in the application-technology-matrix maps to a hosting node **and** a runtime from the standards catalog — dangling references rejected.
 4. Baseline vs Target columns are explicitly labeled per row where a change is proposed; changed rows carry a Gap ID linkable to Phase E.
-5. All diagrams go to `docs/architecture/diagrams/workspace.dsl` (Container/Deployment views) — standalone Mermaid `.mmd` is **banned**.
+5. `current-technology-report.md` covers every baseline component in the portfolio catalog and application-technology-matrix — no baseline element may exist only in the tables; `[UNSPECIFIED - RISK]` entries from `togaf-diagnose` are carried over verbatim.
+6. Every changed element in `future-technology-report.md` names the baseline element it replaces and carries a Gap ID linkable to Phase E's `gap-analysis-matrix.md`.
+7. All diagrams go to this phase's `docs/architecture/phase-d-technology/views.dsl` (+ `model.dsl` for newly introduced elements), composed by `docs/architecture/workspace.dsl`, and are embedded in the owning document as exported SVGs (`![](./view.svg)`) — the five Phase D viewpoints (**Environments and Locations**, **Platform Decomposition**, **Processing**, **Networked Computing/Hardware**, **Communications Engineering**) MUST exist as named views (baseline or target) — standalone Mermaid `.mmd` is **banned**.
 
 ---
 
@@ -60,15 +62,67 @@ Write **independent, standalone files** under `docs/architecture/phase-d-technol
 | Application | Hosting Node | Runtime / OS | Database | Standard IDs Conforming To |
 |---|---|---|---|---|
 | APP-02 Order Svc | TCH-01 Amazon EKS | Node.js 22 | PostgreSQL 15 | TS-01, TS-04 |
-```
 Conformance violations flagged with the standard ID they break.
+
+### 4. `current-technology-report.md` (Baseline Technology Architecture, Version 1.0)
+```markdown
+## Metadata & Control Information
+- **Document ID**: TOGAF-D-BASELINE — **ADM Phase**: Phase D — **Status**: Draft/Approved — **Version**: 1.0
+
+## Estate Summary
+Narrative of the current estate (compute, network, storage, environments, regions). Sourced from `togaf-diagnose`; all `[UNSPECIFIED - RISK]` entries carried over verbatim.
+
+## Environments & Locations
+| Env ID | Environment | Location / Region | Platform(s) | Capacity Notes | Ref Tech IDs |
+|---|---|---|---|---|---|
+| ENV-01 | Production | us-east-1 | TCH-01 Amazon EKS | Peak 4 vCPU/DB | TCH-01, TCH-03 |
+
+## Platform Stack
+| Stack ID | Layer (HW / OS / Runtime / Middleware / Application) | Current Component & Version | Hosted Applications | Standard IDs | Conformance |
+|---|---|---|---|---|---|
+| STK-01 | Runtime | Node.js 18 | APP-02 | TS-01 | Violation (EOL 2025-04) |
+
+## Network & Processing
+| Link ID | Communication Path | Protocol / Transport | Latency / Capacity Notes | Criticality |
+|---|---|---|---|---|
+
+## Baseline Conformance Summary
+| Violation ID | Component | Broken Standard ID | Risk (High/Med/Low) | Registry Ref |
+|---|---|---|---|---|
+```
+
+### 5. `future-technology-report.md` (Target Technology Architecture, Version 1.0)
+```markdown
+## Metadata & Control Information
+- **Document ID**: TOGAF-D-TARGET — **ADM Phase**: Phase D — **Status**: Draft/Approved — **Version**: 1.0
+
+## Target Estate Summary
+Narrative of the target state and the requirements driving each change — every change traceable to a Phase B/C output or architecture principle.
+
+## Target Environments & Locations
+| Env ID | Target Environment | Target Location | Target Platform(s) | Replaces (Baseline Env ID) |
+|---|---|---|---|---|
+
+## Target Platform Stack
+| Stack ID | Layer | Target Component & Version | Standard IDs Conformed To | Replaces (Baseline Stack ID) | Gap ID |
+|---|---|---|---|---|---|
+| STK-01 | Runtime | Node.js 22 LTS | TS-01 | STK-01 | GAP-TECH-01 |
+
+## Target Network & Processing
+| Link ID | Target Path | Protocol | Rationale (Latency / Availability / Cost) |
+|---|---|---|---|
+
+## Transition Notes for Phase E
+| Delta (Added / Removed / Upgraded) | Baseline Ref | Target Ref | Gap ID |
+|---|---|---|---|
+```
 
 ---
 
 ## Guardrails
-- Emit exactly the three Phase D files — never bundle Phase C/E content into them.
+- Emit exactly the five Phase D files — never bundle Phase C/E content into them.
 - Baseline vs Target states must be distinguishable on every row that changes.
-- Architecture visualization is authored only in `docs/architecture/diagrams/workspace.dsl` — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate syntax to the `structurizr-dsl` skill and hierarchy checks to the `c4-model` skill.
+- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-d-technology/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`) and embedded as exported SVGs in the owning document — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate syntax to the `structurizr-dsl` skill and hierarchy checks to the `c4-model` skill.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---

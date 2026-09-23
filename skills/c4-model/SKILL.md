@@ -16,7 +16,7 @@ You are the **C4 Model Skill**. Your role is to enforce the **C4 model** (create
 
 The C4 model provides a hierarchical, "Google Maps-like" zoom mechanism for software architecture. You ensure that all architectural analysis strictly respects the C4 levels of abstraction, preventing ad-hoc, ambiguous "boxes and lines" diagrams.
 
-All C4 definitions are authored in Structurizr DSL at `docs/architecture/diagrams/workspace.dsl` — **standalone Mermaid (`.mmd`) diagrams are banned** (see the Mermaid Policy in the `structurizr-dsl` skill).
+All C4 definitions are authored in Structurizr DSL fragments (`model.dsl` + `views.dsl` colocated with each document's directory) composed by the root workspace `docs/architecture/workspace.dsl` — **standalone Mermaid (`.mmd`) diagrams are banned** (see the Mermaid Policy in the `structurizr-dsl` skill).
 
 ---
 
@@ -66,7 +66,7 @@ All C4 definitions are authored in Structurizr DSL at `docs/architecture/diagram
 3. **No Unmodeled Entities**:
    - Every entity in a C4 diagram must trace directly to a building block in the TOGAF Architecture Content Metamodel (Catalogs & Matrices).
 4. **Single Source of Truth**:
-   - All views are generated from `docs/architecture/diagrams/workspace.dsl`. Hand-authored Mermaid (`.mmd`), PlantUML scripts, or ad-hoc diagram files are **banned**.
+   - All views are generated from the composed workspace rooted at `docs/architecture/workspace.dsl`. Hand-authored Mermaid (`.mmd`), PlantUML scripts, or ad-hoc diagram files are **banned**.
 
 ---
 

@@ -28,9 +28,10 @@ Generate formal contracts between the Architecture Board and implementation team
 ### Step 2: Harness Uniformization (Mastra / Pi Agent)
 1. Select either **Mastra** or **Pi Agent** as the standard team harness — never both in one project.
 2. Configure automated compliance hooks:
-   - `pre-commit` → `lint_c4_diagrams` (validates `docs/architecture/diagrams/workspace.dsl`).
+   - `pre-commit` → `lint_c4_diagrams` (validates `docs/architecture/workspace.dsl` and its `!include` fragments).
    - `pull_request` → `verify_contract_compliance` (checks PRs against the Architecture Contract).
    - Trigger automated Architecture Compliance Reviews on structural code or infrastructure-as-code changes.
+3. **EA 4.0 Cross-Reference (`togaf-agentic-governance`)**: AI agent harness policies MUST reference the `togaf-agentic-governance` skill so that runtime agent rules bind to the EA 4.0 schemas — the **Policy Engine** (context admissibility and constraint validation), the **Effects Gateway** (impact thresholds), and the **Proof Ledger** (passport schemas), as specified in `agentic-control-plane-spec.md`, `proof-ledger-schema.md`, and `governing-primitives-matrix.md`.
 
 ### Interview Prompts
 - "Which quality gates must a release pass before it ships (security scan, performance, schema review)?"
@@ -93,7 +94,7 @@ governance_rules:
 ```
 
 ### CI/CD Compliance Hooks
-- **pre-commit**: `lint_c4_diagrams` → validates `docs/architecture/diagrams/workspace.dsl`.
+- **pre-commit**: `lint_c4_diagrams` → validates `docs/architecture/workspace.dsl` (root workspace and its `!include` fragments).
 - **pull_request**: `verify_contract_compliance` → evaluates changes against `architecture-contract.md`.
 ```
 

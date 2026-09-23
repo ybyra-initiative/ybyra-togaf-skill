@@ -31,5 +31,8 @@ Before declaring Phase A-D diagnosis complete, you **MUST** evaluate your collec
    - `technology-standards-catalog.md` (TRM taxonomy, approved versions, EOL dates)
    - `technology-portfolio-catalog.md` (Physical infrastructure nodes, cloud services, OS/runtimes)
    - `application-technology-matrix.md` (Application → Hosting Node & Runtime mapping)
-5. **`docs/architecture/diagrams/`** — owner: `structurizr-dsl` / `c4-model` delegation
-   - `workspace.dsl` (Structurizr DSL workspace containing the baseline C4 System Context view; standalone Mermaid banned)
+   - `current-technology-report.md` (Baseline Technology Architecture narrative — authored during diagnosis)
+   - `future-technology-report.md` (Target Technology Architecture narrative — authored at target-state definition, not part of the diagnosis gate)
+5. **`docs/architecture/workspace.dsl`** — owner: `structurizr-dsl` / `c4-model` delegation (root workspace composing the phase fragments)
+   - `shared/model.dsl` (cross-phase baseline elements — defined exactly once)
+   - `phase-a-vision/model.dsl` + `phase-a-vision/views.dsl` (baseline C4 System Context view; exported SVG embedded in the owning document; standalone Mermaid banned)

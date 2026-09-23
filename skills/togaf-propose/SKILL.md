@@ -18,9 +18,10 @@ You are the **TOGAF Propose Agent**, the pipeline stage between `togaf-evaluate`
 | Your decision | File author (delegated) | File |
 |---|---|---|
 | Target technology standards, Baseline vs Target | `togaf-phase-d-technology` | `docs/architecture/phase-d-technology/technology-standards-catalog.md` |
+| Target technology state narrative (Target Architecture Description) | `togaf-phase-d-technology` | `docs/architecture/phase-d-technology/future-technology-report.md` |
 | Work package catalog, gap closure mapping | `togaf-phase-e-opportunities` | `docs/architecture/phase-e-opportunities/gap-analysis-matrix.md` |
 | Proposal, Build/Buy/OSS decisions, TA sketch | `togaf-phase-e-opportunities` | `docs/architecture/phase-e-opportunities/target-architecture-proposal.md` |
-| Target-state views | `structurizr-dsl` + `c4-model` | `docs/architecture/diagrams/workspace.dsl` |
+| Target-state views | `structurizr-dsl` + `c4-model` | `docs/architecture/phase-e-opportunities/views.dsl` (composed by `docs/architecture/workspace.dsl`) |
 
 > **Private skills are loaded by file path**: the phase skills and the modeling standards carry `disable-model-invocation: true` — they are not in the consumer's skill list and cannot be invoked through the Skill tool. To delegate, read the skill directly from disk (e.g., `.agents/skills/togaf-phase-e-opportunities/SKILL.md`, relative to the project root) and apply its instructions inline.
 
@@ -48,7 +49,7 @@ Present candidate Work Packages and Transition Architectures to the human archit
 - Establishing business value KPIs for each Transition Architecture.
 
 ### Step 4: Delegate Authoring & Approval Gate
-1. Instruct `togaf-phase-d-technology` to write the target-state standards columns and `togaf-phase-e-opportunities` to write the gap matrix and target proposal files (schemas defined in those skills).
+1. Instruct `togaf-phase-d-technology` to write the target-state standards columns and `future-technology-report.md`, and `togaf-phase-e-opportunities` to write the gap matrix and target proposal files (schemas defined in those skills).
 2. Run the `togaf-deliverable-engine` linter over each emitted file.
 3. Present the proposal for explicit human approval. **Gate**: no advancement to `togaf-plan` without approved Work Package IDs and TA scope.
 
@@ -56,9 +57,10 @@ Present candidate Work Packages and Transition Architectures to the human archit
 
 ## Output Artifacts (owned by delegated phase skills)
 - `docs/architecture/phase-d-technology/technology-standards-catalog.md` (Target columns)
+- `docs/architecture/phase-d-technology/future-technology-report.md` (Target Technology Architecture)
 - `docs/architecture/phase-e-opportunities/gap-analysis-matrix.md`
 - `docs/architecture/phase-e-opportunities/target-architecture-proposal.md`
-- `docs/architecture/diagrams/workspace.dsl` (target-state container view extension)
+- `docs/architecture/phase-e-opportunities/views.dsl` (target-state container view fragment, composed by `docs/architecture/workspace.dsl`)
 
 ---
 
@@ -66,7 +68,7 @@ Present candidate Work Packages and Transition Architectures to the human archit
 - **No Big-Bang Mandates**: always structure proposals with at least one intermediate Transition Architecture.
 - **Traceability**: every Work Package MUST reference the specific Gap IDs from the `togaf-evaluate` output it resolves; TAs MUST reference the WP IDs they scope.
 - **File Independence**: never dump proposal content into a monolithic document — each deliverable is an independent Markdown file written by its owning phase skill.
-- **Single Source of Truth**: target-state diagrams are Structurizr DSL extensions in `workspace.dsl`. Hand-authored Mermaid (`.mmd` or inline blocks) is banned; delegate DSL syntax to `structurizr-dsl` and C4 hierarchy validation to `c4-model`.
+- **Single Source of Truth**: target-state diagrams are Structurizr DSL extensions in the proposing phase's `views.dsl` fragment composed by `docs/architecture/workspace.dsl` (embedded as exported SVGs in the owning document). Hand-authored Mermaid (`.mmd` or inline blocks) is banned; delegate DSL syntax to `structurizr-dsl` and C4 hierarchy validation to `c4-model`.
 
 ---
 

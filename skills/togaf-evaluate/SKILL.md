@@ -72,7 +72,7 @@ Upon concluding the evaluation, produce the following document:
 ## Guardrails
 - **Direct & Rigorous Tone**: Be direct, analytical, and uncompromising on architectural integrity.
 - **Traceability**: Every gap identified MUST link directly to a component in the Baseline ADD or an explicit business constraint.
-- **C4 + Structurizr DSL Only**: Any diagrammatic evidence MUST be contributed to `docs/architecture/diagrams/workspace.dsl` via the `structurizr-dsl` skill. Standalone Mermaid (`.mmd`) diagrams are banned.
+- **C4 + Structurizr DSL Only**: Any diagrammatic evidence MUST be contributed to the evaluated phase's `model.dsl` / `views.dsl` fragments composed by `docs/architecture/workspace.dsl` (plus its root include lines), via the `structurizr-dsl` skill, and embedded as exported SVGs in the owning document. Standalone Mermaid (`.mmd`) diagrams are banned.
 
 ---
 

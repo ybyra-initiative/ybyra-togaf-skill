@@ -49,13 +49,13 @@ Once the Completeness Evaluation Gate passes, do **NOT** output a single monolit
 | A | `togaf-phase-a-vision` | `architecture-vision.md`, `stakeholder-actor-map.md`, `principles-catalog.md` |
 | B | `togaf-phase-b-business` | `driver-goal-objective-catalog.md`, `business-capability-catalog.md`, `organization-actor-catalog.md` |
 | C | `togaf-phase-c-information` | `application-portfolio-catalog.md`, `data-entity-catalog.md`, `application-data-crud-matrix.md`, `interface-catalog.md`, `application-interaction-matrix.md` |
-| D | `togaf-phase-d-technology` | `technology-standards-catalog.md`, `technology-portfolio-catalog.md`, `application-technology-matrix.md` |
+| D | `togaf-phase-d-technology` | `technology-standards-catalog.md`, `technology-portfolio-catalog.md`, `application-technology-matrix.md`, `current-technology-report.md` (the `future-technology-report.md` is authored later, at target-state definition) |
 
 > **Private skills are loaded by file path**: the phase skills and the modeling standards carry `disable-model-invocation: true` — they are not in the consumer's skill list and cannot be invoked through the Skill tool. To delegate, read the skill directly from disk (e.g., `.agents/skills/togaf-phase-a-vision/SKILL.md`, relative to the project root) and apply its instructions inline. The same applies to `structurizr-dsl` and `c4-model`.
 
 Every emitted file MUST pass the `togaf-deliverable-engine` linter (Content Metamodel structure, no vague placeholders, complete columns).
 
-The baseline diagram MUST be generated as `docs/architecture/diagrams/workspace.dsl` containing a valid Structurizr DSL workspace with a System Context view. Delegate DSL syntax generation to the `structurizr-dsl` skill and C4 hierarchy validation to the `c4-model` skill. Standalone Mermaid (`.mmd`) diagrams are banned.
+The baseline diagram MUST be generated as the root workspace `docs/architecture/workspace.dsl` (composing `phase-a-vision/model.dsl` + `phase-a-vision/views.dsl` fragments) containing a valid Structurizr DSL workspace with a System Context view, embedded as an exported SVG in the baseline document. Delegate DSL syntax generation to the `structurizr-dsl` skill and C4 hierarchy validation to the `c4-model` skill. Standalone Mermaid (`.mmd`) diagrams are banned.
 
 ---
 

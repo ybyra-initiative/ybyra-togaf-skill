@@ -1,6 +1,6 @@
 # TOGAF Agent Skills
 
-[Open Agent Skills Spec](https://agentskills.io/specification)-compliant package of **16 specialized Agent Skills** managing enterprise architecture analysis across **TOGAF ADM Phases A through H**, using the **C4 model + Structurizr DSL** as the exclusive architecture modeling standard. All deliverables follow a **Docs-as-Code** philosophy — plain-text Markdown and a single `workspace.dsl` model colocated inside your project's Git repository.
+[Open Agent Skills Spec](https://agentskills.io/specification)-compliant package of **17 specialized Agent Skills** managing enterprise architecture analysis across **TOGAF ADM Phases A through H**, using the **C4 model + Structurizr DSL** as the exclusive architecture modeling standard. All deliverables follow a **Docs-as-Code** philosophy — plain-text Markdown and a modular Structurizr DSL workspace (`workspace.dsl` + colocated per-phase fragments), with exported SVGs embedded directly in each deliverable, inside your project's Git repository.
 
 ## Included Skills
 
@@ -13,6 +13,7 @@
 | `togaf-evaluate` | Adversarial critique agent: grilling protocol, data provenance audits, Gap Analysis Matrix findings |
 | `togaf-propose` | Pipeline stage after `togaf-evaluate`: groups gaps into Work Packages, formulates Transition Architectures, runs the co-design loop; delegates proposal files to phase D/E skills |
 | `togaf-plan` | Pipeline stage after `togaf-propose`: cost/risk assessment, Architecture Contracts, harness uniformization; delegates plan files to phase F/G skills |
+| `togaf-agentic-governance` | EA 4.0 runtime governance (Phase G): Governance Spine, Runtime Control Plane (Policy Engine, Protocol Engine, Effects Gateway), Proof Ledgers, and 7 Governing Primitives for AI agent judgment — writes `agentic-control-plane-spec.md`, `proof-ledger-schema.md`, `governing-primitives-matrix.md` |
 | `togaf-deliverable-engine` | Writing quality enforcement against the TOGAF Content Metamodel (Catalogs, Matrices, Diagrams) — linter Rules 1–4 + template composers |
 
 ### Explicit TOGAF ADM Phase Skills (A–H)
@@ -22,7 +23,7 @@
 | `togaf-phase-a-vision` | Phase A — Architecture Vision | `architecture-vision.md`, `stakeholder-actor-map.md`, `principles-catalog.md` |
 | `togaf-phase-b-business` | Phase B — Business Architecture | `driver-goal-objective-catalog.md`, `business-capability-catalog.md`, `organization-actor-catalog.md` |
 | `togaf-phase-c-information` | Phase C — Information Systems Architecture | `application-portfolio-catalog.md`, `data-entity-catalog.md`, `application-data-crud-matrix.md`, `interface-catalog.md`, `application-interaction-matrix.md` |
-| `togaf-phase-d-technology` | Phase D — Technology Architecture | `technology-standards-catalog.md`, `technology-portfolio-catalog.md`, `application-technology-matrix.md` |
+| `togaf-phase-d-technology` | Phase D — Technology Architecture | `technology-standards-catalog.md`, `technology-portfolio-catalog.md`, `application-technology-matrix.md`, `current-technology-report.md`, `future-technology-report.md` |
 | `togaf-phase-e-opportunities` | Phase E — Opportunities and Solutions | `gap-analysis-matrix.md`, `target-architecture-proposal.md` |
 | `togaf-phase-f-migration` | Phase F — Migration Planning | `migration-plan.md`, `transition-architectures.md` |
 | `togaf-phase-g-governance` | Phase G — Implementation Governance | `architecture-contract.md`, `harness-execution-policy.md` |
@@ -33,13 +34,17 @@
 | Skill | Purpose |
 |---|---|
 | `c4-model` | C4 abstraction framework enforcement (System Context, Container, Component, Code), hierarchy rules, tech/protocol annotations |
-| `structurizr-dsl` | Generation & validation of `workspace.dsl` — the single source of truth for all architectural views |
+| `structurizr-dsl` | Generation & validation of the composed `workspace.dsl` + `!include` fragments — the single source of truth for all architectural views |
+
+### Enterprise Architecture 4.0 (EA 4.0) Runtime Governance
+
+The pack implements the EA 4.0 paradigm: *"TOGAF Phase A–D governs enterprise architecture (deterministic execution), while EA 4.0 governs enterprise agency (authorized judgment in motion)."* The `togaf-agentic-governance` skill adds the **Agentic Control Layer** (Governance Spine, Runtime Control Plane, Proof Ledgers) that locks directly on top of TOGAF Phase D, executed as part of Phase G governance. Concept video: [EA 4.0 — Enterprise Agency Governance](https://www.youtube.com/watch?v=5FXqgO5esoU).
 
 ## Skill Surfacing: Surfaced vs. Private Skills
 
-When you import this pack, **only 6 of the 16 skills appear in your agent's skill list**:
+When you import this pack, **only 7 of the 17 skills appear in your agent's skill list**:
 
-**Surfaced (model-invocable):** `togaf-orchestrator`, `togaf-diagnose`, `togaf-evaluate`, `togaf-propose`, `togaf-plan`, `togaf-deliverable-engine`
+**Surfaced (model-invocable):** `togaf-orchestrator`, `togaf-diagnose`, `togaf-evaluate`, `togaf-propose`, `togaf-plan`, `togaf-agentic-governance`, `togaf-deliverable-engine`
 
 **Private (10):** the 8 `togaf-phase-*` skills plus `c4-model` and `structurizr-dsl`. Each carries this frontmatter flag:
 
@@ -57,9 +62,9 @@ To harden this on the consumer side (e.g., in `.claude/settings.json`), you can 
 
 ## Modeling Standard: C4 + Structurizr DSL (Mermaid Banned)
 
-All architectural diagrams in this package are defined as **code** using the [C4 model](https://c4model.com) abstractions expressed in [Structurizr DSL](https://docs.structurizr.com/dsl). A single `docs/architecture/diagrams/workspace.dsl` file is the **single source of truth** — a semantic model from which every view (System Context, Container, Component, Deployment) is generated, keeping naming, relationships, and abstraction levels consistent.
+All architectural diagrams in this package are defined as **code** using the [C4 model](https://c4model.com) abstractions expressed in [Structurizr DSL](https://docs.structurizr.com/dsl). The root workspace at `docs/architecture/workspace.dsl` is the **single source of truth** — a semantic model composed via `!include` from per-phase fragments (`model.dsl` + `views.dsl`) colocated with each document's directory, from which every view (System Context, Container, Component, Deployment) is generated, keeping naming, relationships, and abstraction levels consistent. Exported SVGs are embedded directly in the Markdown document that owns them (`![](./view.svg)`), so every diagram renders inside its document in VS Code's Markdown preview and on GitHub.
 
-**Why standalone Mermaid is banned**: Standalone Mermaid/PlantUML/ad-hoc boxes-and-lines syntax (`.mmd` files) treats diagrams as disconnected graphics. They hold no semantic model, so element names drift between diagrams, relationship rules are unenforced, and C4 abstraction levels get mixed. A "models as code" paradigm fixes this: the DSL workspace *is* the architecture, and any diagram is just a view of it ([Why Models as Code?](https://docs.structurizr.com/as-code)). Mermaid/PlantUML output is permitted only as an **auto-generated export** from the Structurizr workspace via the Structurizr CLI — never hand-authored.
+**Why standalone Mermaid is banned**: Standalone Mermaid/PlantUML/ad-hoc boxes-and-lines syntax (`.mmd` files) treats diagrams as disconnected graphics. They hold no semantic model, so element names drift between diagrams, relationship rules are unenforced, and C4 abstraction levels get mixed. A "models as code" paradigm fixes this: the DSL workspace *is* the architecture, and any diagram is just a view of it ([Why Models as Code?](https://docs.structurizr.com/as-code)). Mermaid/PlantUML output is permitted only as an **auto-generated export** from the Structurizr workspace via the Structurizr `export` command — never hand-authored.
 
 ## Installation
 
@@ -69,7 +74,7 @@ All architectural diagrams in this package are defined as **code** using the [C4
 npx github:ybyra-initiative/ybyra-togaf-skill
 ```
 
-This copies all 16 skills into `./.agents/skills/` in your project.
+This copies all 17 skills into `./.agents/skills/` in your project.
 
 ### Git Submodule Workflow (Recommended for Private Repos)
 
@@ -91,7 +96,7 @@ npx github:ybyra-initiative/ybyra-togaf-skill --update --force   # overwrite loc
 
 | Command / Flag | Description |
 |---|---|
-| *(default)*, `--update` | Install / sync skills from the repo into `./.agents/skills/` (validated against the canonical 16-skill pack) |
+| *(default)*, `--update` | Install / sync skills from the repo into `./.agents/skills/` (validated against the canonical 17-skill pack) |
 | `--sync-back`, `-s` | Copy modified skills from `./.agents/skills/` back into the repo clone, show diff summary, and print PR staging instructions |
 | `--force`, `-f` | Bypass collision checks and overwrite |
 | `--dry-run` | Validate paths and skill pack structure without writing files |
@@ -122,44 +127,74 @@ This copies your local `.agents/skills` edits into the upstream repo clone, prin
 
 ```text
 docs/architecture/
+├── workspace.dsl                # ROOT: single model{} + views{} of !include lines ONLY
+├── shared/
+│   └── model.dsl                # cross-phase elements — defined exactly once
 ├── phase-a-vision/
-│   ├── architecture-vision.md
+│   ├── architecture-vision.md   # embeds: ![System Context](./system-context.svg)
 │   ├── stakeholder-actor-map.md
-│   └── principles-catalog.md
+│   ├── principles-catalog.md
+│   ├── model.dsl                # elements this phase introduces
+│   ├── views.dsl                # this phase's named views
+│   └── system-context.svg       # exported view, embedded in the owning .md
 ├── phase-b-business/
 │   ├── driver-goal-objective-catalog.md
 │   ├── business-capability-catalog.md
-│   └── organization-actor-catalog.md
+│   ├── organization-actor-catalog.md
+│   ├── model.dsl
+│   ├── views.dsl
+│   └── *.svg
 ├── phase-c-information/
 │   ├── application-portfolio-catalog.md
 │   ├── data-entity-catalog.md
 │   ├── application-data-crud-matrix.md
 │   ├── interface-catalog.md
-│   └── application-interaction-matrix.md
+│   ├── application-interaction-matrix.md
+│   ├── model.dsl
+│   ├── views.dsl
+│   └── *.svg
 ├── phase-d-technology/
 │   ├── technology-standards-catalog.md
 │   ├── technology-portfolio-catalog.md
-│   └── application-technology-matrix.md
+│   ├── application-technology-matrix.md
+│   ├── current-technology-report.md
+│   ├── future-technology-report.md
+│   ├── model.dsl
+│   ├── views.dsl
+│   └── *.svg
 ├── phase-e-opportunities/
 │   ├── gap-analysis-matrix.md
-│   └── target-architecture-proposal.md
+│   ├── target-architecture-proposal.md
+│   ├── model.dsl
+│   ├── views.dsl
+│   └── *.svg
 ├── phase-f-migration/
 │   ├── migration-plan.md
-│   └── transition-architectures.md
+│   ├── transition-architectures.md
+│   ├── model.dsl
+│   ├── views.dsl
+│   └── *.svg
 ├── phase-g-governance/
 │   ├── architecture-contract.md
-│   └── harness-execution-policy.md
+│   ├── harness-execution-policy.md
+│   ├── agentic-control-plane-spec.md
+│   ├── proof-ledger-schema.md
+│   ├── governing-primitives-matrix.md
+│   ├── model.dsl
+│   ├── views.dsl
+│   └── *.svg
 ├── phase-h-change/
 │   ├── architecture-change-log.md
-│   └── operational-hand-off.md
-├── diagrams/
-│   └── workspace.dsl            # Single source of truth (C4 + Structurizr DSL)
+│   ├── operational-hand-off.md
+│   ├── model.dsl
+│   ├── views.dsl
+│   └── *.svg
 └── skill-feedback.md            # Continuous Skill Contribution & Feedback Loop log
 ```
 
 ## Development
 
-- `npm test` runs `node cli.js --dry-run` (validates the 16-skill pack structure and install paths).
+- `npm test` runs `node cli.js --dry-run` (validates the 17-skill pack structure and install paths).
 
 ## References & Industry Standards
 
@@ -169,4 +204,4 @@ docs/architecture/
 - [C4 Model](https://c4model.com) · [Structurizr DSL Specification](https://docs.structurizr.com/dsl) · [Why Models as Code?](https://docs.structurizr.com/as-code)
 - [Markdown Architectural Decision Records (MADR)](https://adr.github.io/madr/)
 - [Backstage TechDocs](https://backstage.io/docs/features/techdocs/) · [Docusaurus](https://docusaurus.io/docs)
-- [Visual Paradigm Implementation Governance Model](https://circle.visual-paradigm.com/)
+- [Visual Paradigm Implementation Governance Model](https://circle.visual-paradigm.com/) · [EA 4.0 Concept Video (YouTube)](https://www.youtube.com/watch?v=5FXqgO5esoU)

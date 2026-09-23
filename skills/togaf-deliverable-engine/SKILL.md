@@ -16,7 +16,7 @@ You are the **TOGAF Deliverable Engine & Quality Enforcement Skill**. Your purpo
 You ensure that every TOGAF ADM artifact satisfies the **TOGAF Content Metamodel** by incorporating its three foundational representations:
 1.  **Catalogs**: Structured Markdown tables containing discrete Building Blocks.
 2.  **Matrices**: Cross-domain relationship and mapping tables.
-3.  **Diagrams**: Text-based visual models authored exclusively in Structurizr DSL (`workspace.dsl`), validated against C4 abstraction rules.
+3.  **Diagrams**: Text-based visual models authored exclusively in Structurizr DSL fragments composed into `docs/architecture/workspace.dsl`, validated against C4 abstraction rules, rendered as exported SVGs embedded in the owning document.
 
 ---
 
@@ -40,7 +40,7 @@ Every generated deliverable document MUST adhere to this tripartite structure:
 [Markdown Table format displaying cross-domain mappings, e.g., Application-to-Function, Technology-to-Application]
 
 ## 3. Architecture Diagrams (Text-Based Models)
-[Reference to the Structurizr DSL `workspace.dsl` file (and/or an embedded Structurizr DSL code block) rendering the structural view]
+[Embedded exported SVG rendering the structural view, e.g. ![Containers](./containers.svg), plus a relative link to the owning views.dsl fragment (and/or an embedded Structurizr DSL code block for preview-poor platforms)]
 
 ## 4. Requirements & Traceability Mapping
 [Mapping of artifacts back to Architecture Requirements Specification]
@@ -60,8 +60,8 @@ Before approving or rendering any deliverable file, run this mandatory validatio
 *   Every table row MUST have all columns populated. Unique IDs (e.g., `APP-01`, `CAP-04`, `REQ-12`) are mandatory for traceability.
 
 ### Rule 3: Valid Structurizr DSL Syntax
-*   Architectural diagrams MUST be authored in Structurizr DSL (`workspace.dsl`) — standalone Mermaid/PlantUML/ad-hoc diagramming (`.mmd` files) is **banned** for primary architectural definitions.
-*   Structurizr DSL must compile cleanly via the Structurizr CLI: no floating containers, no missing technology annotations, and every relationship labeled with purpose and protocol.
+*   Architectural diagrams MUST be authored in Structurizr DSL — in this document's phase `model.dsl` / `views.dsl` fragments composed by `docs/architecture/workspace.dsl` — standalone Mermaid/PlantUML/ad-hoc diagramming (`.mmd` files) is **banned** for primary architectural definitions.
+*   Structurizr DSL must compile cleanly via the Structurizr `export` command (e.g. `export -workspace docs/architecture/workspace.dsl -format json`): no floating containers, no missing technology annotations, and every relationship labeled with purpose and protocol.
 *   Delegate DSL syntax generation to the `structurizr-dsl` skill and C4 hierarchy validation to the `c4-model` skill. Both are private (`disable-model-invocation: true`) — not in the consumer's skill list and not invocable through the Skill tool, so read them directly from disk (`.agents/skills/structurizr-dsl/SKILL.md`, `.agents/skills/c4-model/SKILL.md`, relative to the project root) and apply their instructions inline.
 
 ### Rule 4: Explicit Data Provenance & Owners
@@ -86,35 +86,57 @@ Before approving or rendering any deliverable file, run this mandatory validatio
 | Inventory Audit | Legacy ERP | COBOL / Mainframe | Deprecated | GAP-APP-02 |
 ```
 
-### Standard Diagram Template (Structurizr DSL Container View)
+### Standard Diagram Template (Per-Phase Fragment + SVG Embed)
+
+Author the diagram as two colocated fragments, register them in the root workspace, then embed the exported SVG in this document.
+
+`docs/architecture/phase-[x]*/model.dsl` (bare statements — no `workspace`/`model`/`views` wrapper):
 ```structurizr
-workspace "Architecture State" "Container view for the current deliverable" {
+user = person "User" "Primary actor"
+sys = softwareSystem "Enterprise System" {
+    webApp = container "Core Web App" "Delivers client UX" "React / TypeScript"
+    api = container "API Gateway" "Routes & authenticates requests" "Go / Envoy"
+    db = container "Database" "Stores core domain entities" "PostgreSQL 15"
+}
+user -> webApp "Uses" "HTTPS"
+webApp -> api "Calls" "HTTPS/JSON"
+api -> db "Reads/Writes" "SQL / TCP 5432"
+```
+
+`docs/architecture/phase-[x]*/views.dsl` (bare view statements):
+```structurizr
+container sys "Containers" {
+    include *
+    autolayout lr
+}
+```
+
+`docs/architecture/workspace.dsl` (root — add one include line per block per phase):
+```structurizr
+workspace "Enterprise Architecture" "Composed from per-phase fragments via !include" {
     model {
-        user = person "User" "Primary actor"
-        sys = softwareSystem "Enterprise System" {
-            webApp = container "Core Web App" "Delivers client UX" "React / TypeScript"
-            api = container "API Gateway" "Routes & authenticates requests" "Go / Envoy"
-            db = container "Database" "Stores core domain entities" "PostgreSQL 15"
-        }
-        user -> webApp "Uses" "HTTPS"
-        webApp -> api "Calls" "HTTPS/JSON"
-        api -> db "Reads/Writes" "SQL / TCP 5432"
+        !include shared/model.dsl
+        !include phase-[x]*/model.dsl
     }
     views {
-        container sys "Containers" {
-            include *
-            autolayout lr
-        }
+        !include phase-[x]*/views.dsl
     }
 }
 ```
+
+Embed the exported SVG in this document:
+```markdown
+![Containers](./containers.svg)
+```
+
+(SVG generated via `export -workspace docs/architecture/workspace.dsl -format svg -output docs/architecture/phase-[x]*/` and committed alongside the `.md`.)
 
 ---
 
 ## Guardrails
 
 - Every deliverable MUST be an **independent, standalone Markdown file** at its phase-specific path under `docs/architecture/phase-[a-h]-*/` — never bundle multiple deliverables into one file.
-- All architectural visualization definitions live in `docs/architecture/diagrams/workspace.dsl` (single source of truth). Standalone Mermaid `.mmd` diagrams are **banned**.
+- All architectural visualization definitions are defined in per-phase DSL fragments (`model.dsl` + `views.dsl`) composed by `docs/architecture/workspace.dsl` and embedded as exported SVGs in the owning document (single source of truth). Standalone Mermaid `.mmd` diagrams are **banned**.
 - Reject any deliverable whose tables contain empty required cells or placeholder text (Rule 1/2) before it reaches governance review.
 
 ---
