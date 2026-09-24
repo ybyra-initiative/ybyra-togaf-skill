@@ -42,7 +42,7 @@ Compile a clean, self-contained hand-off package for operational teams, executiv
 2. Every **Re-Architecting** row triggers a Request for Architecture Work section — missing RAF rejected.
 3. Compliance audit section lists deployment status, operational health metrics, and active dispensations (or explicit "None").
 4. Repository update log is checklist-complete (baseline ADD, ABBs, lessons learned).
-5. Hand-off references diagrams only via the phase DSL fragments composed by `docs/architecture/workspace.dsl` (embedded as exported SVGs in the owning documents) — standalone Mermaid `.mmd` is **banned**.
+5. Hand-off references diagrams only via this phase's colocated archify specs (`docs/architecture/phase-h-change/<view>.<type>.json` + generated `.html`/`.visual-check.*` artifacts, embedded as PNG sidecar + interactive HTML link in the owning documents) — standalone Mermaid `.mmd` is **banned**.
 
 ---
 
@@ -95,7 +95,7 @@ Write **independent, standalone files** under `docs/architecture/phase-h-change/
 - Emit exactly the two Phase H files — never bundle governance contract content into them.
 - **Clear governance escalation**: never treat a Re-Architecting change as a simple patch; force generation of a new Request for Architecture Work.
 - **Clean hand-off**: all documentation self-contained and formatted for static site rendering.
-- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-h-change/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`) and embedded as exported SVGs in the owning document (`![](./view.svg)`) — standalone Mermaid (`.mmd`) diagrams are **banned**.
+- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-h-change/<view>.<type>.json` — baseline vs changed state as `.base.`/`.head.` delta pairs), rendered via `deliver`/`compare` + `visual-check` and embedded as PNG sidecar + interactive HTML link — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---
@@ -110,4 +110,4 @@ Write **independent, standalone files** under `docs/architecture/phase-h-change/
 - **TOGAF ADM Phase H**: [QualiWare TOGAF Architectural Artifacts](https://coe.qualiware.com/resources/togaf/9-1/part4-contentframework/architectural-artifacts/) | [TOGAF 9.1 Pocket Guide (G117)](https://e-serkom-ng.co.id/assets/uploads/skema/benchmark/e68f6-togaf-9.1-book-pocket-guide-g117.pdf) | [The Open Group TOGAF Standard](https://www.opengroup.org/togaf)
 - **Open Agent Skills Specification**: [agentskills.io/specification](https://agentskills.io/specification)
 - **Docs-as-Code & Publishing**: [Backstage TechDocs](https://backstage.io/docs/features/techdocs/) | [Docusaurus](https://docusaurus.io/docs)
-- **Modeling Standard**: [C4 Model](https://c4model.com/) | [Structurizr DSL](https://docs.structurizr.com/dsl) | [Why Models as Code?](https://docs.structurizr.com/as-code)
+- **Modeling Standard**: [C4 Model](https://c4model.com/) | [archify Toolchain (vendored)](.agents/skills/archify/SKILL.md) | [Archify Spec Policy (TOGAF)](.agents/skills/archify-spec/SKILL.md)

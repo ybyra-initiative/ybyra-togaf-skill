@@ -16,7 +16,7 @@ You are the **C4 Model Skill**. Your role is to enforce the **C4 model** (create
 
 The C4 model provides a hierarchical, "Google Maps-like" zoom mechanism for software architecture. You ensure that all architectural analysis strictly respects the C4 levels of abstraction, preventing ad-hoc, ambiguous "boxes and lines" diagrams.
 
-All C4 definitions are authored in Structurizr DSL fragments (`model.dsl` + `views.dsl` colocated with each document's directory) composed by the root workspace `docs/architecture/workspace.dsl` — **standalone Mermaid (`.mmd`) diagrams are banned** (see the Mermaid Policy in the `structurizr-dsl` skill).
+All C4 definitions are authored as archify JSON specs colocated with each document's directory (`docs/architecture/phase-<x>/<view>.<type>.json`) — **standalone Mermaid (`.mmd`) diagrams are banned** (see the Mermaid Policy in the `archify-spec` skill). This skill owns the conceptual vocabulary; the `archify-spec` skill owns authoring policy, and the vendored `archify` skill (`.agents/skills/archify/`) owns schemas and rendering.
 
 ---
 
@@ -46,6 +46,21 @@ All C4 definitions are authored in Structurizr DSL fragments (`model.dsl` + `vie
 
 ---
 
+## C4 → archify Mapping
+
+| C4 concept | archify construct |
+|---|---|
+| Person / User (Level 1) | component `type: "external"` with the persona in `sublabel` (e.g., `Users` / `Browser + Mobile`) |
+| Software System in scope (Level 1) | `boundaries[]` entry with `kind: "region"` wrapping the system's components |
+| External software system (Level 1) | component `type: "external"` |
+| Container (Level 2) | component typed `frontend` \| `backend` \| `database` \| `messagebus` \| `cloud` \| `security`, technology stack in `sublabel` |
+| Component (Level 3) | `cards[]` detail or a dedicated focused view via guided views (`focus` id-lists) |
+| Deployment / infrastructure node | `type: "cloud"` component inside a `region` boundary (Phase D) |
+| Dynamic/runtime behavior (supporting) | `workflow` or `sequence` diagram type |
+| Relationship | `connections[]` entry with purpose `label` (+ protocol), `variant: emphasis\|security\|dashed` where warranted |
+
+---
+
 ## Supporting Diagram Types
 
 1. **System Landscape Diagram**: Shows the enterprise-wide ecosystem of multiple software systems, actors, and global integrations.
@@ -66,7 +81,7 @@ All C4 definitions are authored in Structurizr DSL fragments (`model.dsl` + `vie
 3. **No Unmodeled Entities**:
    - Every entity in a C4 diagram must trace directly to a building block in the TOGAF Architecture Content Metamodel (Catalogs & Matrices).
 4. **Single Source of Truth**:
-   - All views are generated from the composed workspace rooted at `docs/architecture/workspace.dsl`. Hand-authored Mermaid (`.mmd`), PlantUML scripts, or ad-hoc diagram files are **banned**.
+   - All views are generated from archify JSON specs colocated with the owning document (`docs/architecture/phase-<x>/<view>.<type>.json`) via the CLI's `deliver` + `visual-check` — artifacts are generated output, never hand-edited. Hand-authored Mermaid (`.mmd`), PlantUML scripts, or ad-hoc diagram files are **banned**.
 
 ---
 
@@ -80,5 +95,5 @@ All C4 definitions are authored in Structurizr DSL fragments (`model.dsl` + `vie
 - **C4 Model Home & Specification**: [https://c4model.com/](https://c4model.com/)
 - **Abstractions & Hierarchies**: [https://c4model.com/abstractions](https://c4model.com/abstractions)
 - **Diagram Review Checklist**: [https://c4model.com/diagrams/checklist](https://c4model.com/diagrams/checklist)
-- **Structurizr DSL Reference**: [https://docs.structurizr.com/dsl](https://docs.structurizr.com/dsl) | **Why "as code"?**: [https://docs.structurizr.com/as-code](https://docs.structurizr.com/as-code)
+- **Vendored archify toolchain**: `.agents/skills/archify/` (SKILL.md, `schemas/`, `examples/`, `references/delivery-contract.md`) | **TOGAF authoring policy**: `.agents/skills/archify-spec/SKILL.md`
 - **Open Agent Skills Specification**: [https://agentskills.io/specification](https://agentskills.io/specification)

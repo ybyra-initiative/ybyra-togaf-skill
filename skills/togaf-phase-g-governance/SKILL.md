@@ -28,7 +28,7 @@ Generate formal contracts between the Architecture Board and implementation team
 ### Step 2: Harness Uniformization (Mastra / Pi Agent)
 1. Select either **Mastra** or **Pi Agent** as the standard team harness — never both in one project.
 2. Configure automated compliance hooks:
-   - `pre-commit` → `lint_c4_diagrams` (validates `docs/architecture/workspace.dsl` and its `!include` fragments).
+   - `pre-commit` → `validate_archify_specs` (runs `archify validate <spec> --quality showcase --json` over every `docs/architecture/**/*.json` spec).
    - `pull_request` → `verify_contract_compliance` (checks PRs against the Architecture Contract).
    - Trigger automated Architecture Compliance Reviews on structural code or infrastructure-as-code changes.
 3. **EA 4.0 Cross-Reference (`togaf-agentic-governance`)**: AI agent harness policies MUST reference the `togaf-agentic-governance` skill so that runtime agent rules bind to the EA 4.0 schemas — the **Policy Engine** (context admissibility and constraint validation), the **Effects Gateway** (impact thresholds), and the **Proof Ledger** (passport schemas), as specified in `agentic-control-plane-spec.md`, `proof-ledger-schema.md`, and `governing-primitives-matrix.md`.
@@ -42,7 +42,7 @@ Generate formal contracts between the Architecture Board and implementation team
 1. Every contract rule is **explicit, measurable, and machine-verifiable where possible** — reject "follow best practices"; require `All services MUST expose OpenAPI 3.0 endpoints`.
 2. Every mandatory standard links to a Phase D Standard ID (`TS-xx`) or Phase E Gap ID.
 3. The dispensation workflow names the approver role, expiry condition, and re-review trigger.
-4. Harness YAML is syntactically valid; `lint_c4_diagrams` hook present at `pre-commit`.
+4. Harness YAML is syntactically valid; `validate_archify_specs` hook present at `pre-commit`.
 5. Exactly one harness (`mastra` or `pi-agent`) selected per project.
 
 ---
@@ -86,7 +86,7 @@ governance_rules:
   architecture_contract: "AC-2026-PROJECT-X"
   compliance_checkpoints:
     - stage: pre-commit
-      action: lint_c4_diagrams
+      action: validate_archify_specs
     - stage: pull_request
       action: verify_contract_compliance
   dispensation_handler:
@@ -94,7 +94,7 @@ governance_rules:
 ```
 
 ### CI/CD Compliance Hooks
-- **pre-commit**: `lint_c4_diagrams` → validates `docs/architecture/workspace.dsl` (root workspace and its `!include` fragments).
+- **pre-commit**: `validate_archify_specs` → runs `archify validate ... --quality showcase` (9 artifact checks, 0 errors, 0 warnings) over the colocated specs under `docs/architecture/` (via `.agents/skills/archify/bin/archify.mjs`).
 - **pull_request**: `verify_contract_compliance` → evaluates changes against `architecture-contract.md`.
 ```
 
@@ -103,7 +103,7 @@ governance_rules:
 ## Guardrails
 - Emit exactly the two Phase G files — migration sequencing belongs to `togaf-phase-f-migration`.
 - **Harness uniformity**: do not allow mixing execution frameworks within the same project team.
-- **Contract enforcement**: rules must be explicit and machine-verifiable; the `lint_c4_diagrams` hook enforces the Structurizr DSL standard (root `docs/architecture/workspace.dsl` + `!include` fragments, exported SVGs embedded as `![](./view.svg)`) — standalone Mermaid (`.mmd`) diagrams are **banned**.
+- **Contract enforcement**: rules must be explicit and machine-verifiable; the `validate_archify_specs` hook enforces the archify showcase standard (colocated `<view>.<type>.json` specs, artifacts generated via `deliver` + `visual-check`, embedded as PNG sidecar + interactive HTML link) — standalone Mermaid (`.mmd`) diagrams are **banned**.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---
@@ -117,5 +117,5 @@ governance_rules:
 ## References & Standards
 - **TOGAF ADM Phase G & Architecture Contracts**: [QualiWare TOGAF Architectural Artifacts](https://coe.qualiware.com/resources/togaf/9-1/part4-contentframework/architectural-artifacts/) | [TOGAF 9.1 Pocket Guide (G117)](https://e-serkom-ng.co.id/assets/uploads/skema/benchmark/e68f6-togaf-9.1-book-pocket-guide-g117.pdf) (Architecture Contracts, Dispensation/Compliance Assessment) | [The Open Group TOGAF Standard](https://www.opengroup.org/togaf)
 - **Open Agent Skills Specification**: [agentskills.io/specification](https://agentskills.io/specification)
-- **Modeling Standard**: [C4 Model](https://c4model.com/) | [Structurizr DSL](https://docs.structurizr.com/dsl) | [Why Models as Code?](https://docs.structurizr.com/as-code)
+- **Modeling Standard**: [C4 Model](https://c4model.com/) | [archify Toolchain (vendored)](.agents/skills/archify/SKILL.md) | [Archify Spec Policy (TOGAF)](.agents/skills/archify-spec/SKILL.md)
 - **Governance & EA Practice**: [Visual Paradigm Implementation Governance Model](https://circle.visual-paradigm.com/)

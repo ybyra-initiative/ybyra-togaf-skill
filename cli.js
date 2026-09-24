@@ -71,7 +71,7 @@ function resolveSource() {
   process.exit(1);
 }
 
-/** Canonical pack: 7 cross-cutting + 8 TOGAF ADM phase skills + 2 modeling standards. */
+/** Canonical pack: 7 cross-cutting + 8 TOGAF ADM phase skills + 3 modeling skills (c4-model vocabulary, vendored archify toolchain, archify-spec TOGAF policy). */
 const EXPECTED_SKILLS = [
   "togaf-orchestrator",
   "togaf-diagnose",
@@ -89,7 +89,8 @@ const EXPECTED_SKILLS = [
   "togaf-phase-g-governance",
   "togaf-phase-h-change",
   "c4-model",
-  "structurizr-dsl",
+  "archify",
+  "archify-spec",
 ];
 
 const SOURCE_ROOT = resolveSource();

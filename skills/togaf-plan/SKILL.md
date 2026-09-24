@@ -20,7 +20,7 @@ You are the **TOGAF Plan Agent**, the pipeline stage between `togaf-propose` and
 | Project charters, cost/risk matrix | `togaf-phase-f-migration` | `docs/architecture/phase-f-migration/migration-plan.md` |
 | TA sequencing, capabilities, exit criteria | `togaf-phase-f-migration` | `docs/architecture/phase-f-migration/transition-architectures.md` |
 | Mandatory standards, compliance gates, dispensation | `togaf-phase-g-governance` | `docs/architecture/phase-g-governance/architecture-contract.md` |
-| Harness hooks (`lint_c4_diagrams`, contract checks) | `togaf-phase-g-governance` | `docs/architecture/phase-g-governance/harness-execution-policy.md` |
+| Harness hooks (`validate_archify_specs`, contract checks) | `togaf-phase-g-governance` | `docs/architecture/phase-g-governance/harness-execution-policy.md` |
 
 > **Private skills are loaded by file path**: the phase skills and the modeling standards carry `disable-model-invocation: true` — they are not in the consumer's skill list and cannot be invoked through the Skill tool. To delegate, read the skill directly from disk (e.g., `.agents/skills/togaf-phase-f-migration/SKILL.md`, relative to the project root) and apply its instructions inline.
 
@@ -44,7 +44,7 @@ Generate formal **Architecture Contracts** between the Architecture Board and im
 ### Step 3: Agent Harness Uniformization Rules (Mastra / Pi Agent)
 1. **Uniform Workflow Engine**: select either **Mastra** or **Pi Agent** as the standard team harness; do not mix frameworks within one project team.
 2. **Automated Compliance Hooks**:
-   - `pre-commit` → `lint_c4_diagrams` (validates `docs/architecture/workspace.dsl` and its `!include` fragments, never Mermaid).
+   - `pre-commit` → `validate_archify_specs` (runs `archify validate ... --quality showcase` over `docs/architecture/**/*.json` specs, never Mermaid).
    - `pull_request` → `verify_contract_compliance` (evaluates PRs against the Architecture Contract).
 
 ### Step 4: Delegate Authoring & Approval Gate
@@ -67,7 +67,7 @@ Generate formal **Architecture Contracts** between the Architecture Board and im
 - **Contract Enforcement**: Architecture Contracts must be explicit, measurable, and machine-verifiable where possible.
 - **Traceability**: every project charter MUST link to approved WP IDs; every contract rule MUST link to a `TS-xx` standard or Gap ID.
 - **File Independence**: each deliverable is an independent Markdown file written by its owning phase skill — no monolithic plan document.
-- **Single Source of Truth**: roadmap and sequencing diagrams are Structurizr DSL extensions in the plan phase's `views.dsl` fragment (composed by `docs/architecture/workspace.dsl`, embedded as exported SVGs). Hand-authored Mermaid is banned; delegate DSL syntax to `structurizr-dsl` and C4 hierarchy validation to `c4-model`.
+- **Single Source of Truth**: roadmap and sequencing diagrams are colocated archify specs in the plan phase's directory (`docs/architecture/phase-f-migration/<view>.workflow.json` or `<view>.lifecycle.json`, rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link). Hand-authored Mermaid is banned; delegate authoring policy to `archify-spec` and C4 hierarchy validation to `c4-model`.
 
 ---
 
@@ -80,7 +80,7 @@ Generate formal **Architecture Contracts** between the Architecture Board and im
 ## References & Standards
 - **TOGAF Standard & ADM**: [The Open Group TOGAF Standard](https://www.opengroup.org/togaf) | [TOGAF 9.1 Pocket Guide (G117)](https://e-serkom-ng.co.id/assets/uploads/skema/benchmark/e68f6-togaf-9.1-book-pocket-guide-g117.pdf) | [QualiWare TOGAF Content Framework — Architectural Artifacts](https://coe.qualiware.com/resources/togaf/9-1/part4-contentframework/architectural-artifacts/)
 - **Open Agent Skills Specification**: [agentskills.io/specification](https://agentskills.io/specification)
-- **Architecture as Code & C4 Modeling**: [C4 Model](https://c4model.com/) | [Structurizr DSL Specification](https://docs.structurizr.com/dsl) | [Why Models as Code?](https://docs.structurizr.com/as-code)
+- **Architecture as Code & C4 Modeling**: [C4 Model](https://c4model.com/) | [archify Toolchain (vendored)](.agents/skills/archify/SKILL.md) | [Archify Spec Policy (TOGAF)](.agents/skills/archify-spec/SKILL.md)
 - **Architectural Decision Records (ADRs)**: [Markdown Architectural Decision Records (MADR)](https://adr.github.io/madr/)
 - **Docs-as-Code & Publishing**: [Backstage TechDocs Architecture](https://backstage.io/docs/features/techdocs/) | [Docusaurus Documentation Engine](https://docusaurus.io/docs)
 - **Governance & EA Practice**: [Visual Paradigm Implementation Governance Model](https://circle.visual-paradigm.com/)

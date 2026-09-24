@@ -31,7 +31,7 @@ You are the **TOGAF Phase A Architecture Vision Agent**. Your objective is to es
 2. Every stakeholder row has a Power/Interest quadrant assignment, decision authority, and at least one explicit concern.
 3. Every principle has all four fields (Name, Statement, Rationale, Implications) — no empty cells.
 4. Every fact is traceable: mark `Source: [Interview | Document | Assumed]` per section.
-5. All diagrams go to this phase's `docs/architecture/phase-a-vision/views.dsl` (+ `model.dsl` for newly introduced elements), composed by `docs/architecture/workspace.dsl`, and are embedded in the owning document as exported SVGs (`![](./view.svg)`) (System Context view) — standalone Mermaid `.mmd` is **banned**.
+5. All diagrams go to this phase's colocated archify specs (`docs/architecture/phase-a-vision/<view>.architecture.json`, e.g. the System Context view), accepted via `validate` → `deliver` → `visual-check` (`--quality showcase`), and are embedded in the owning document as PNG sidecar + interactive HTML link — standalone Mermaid `.mmd` is **banned**.
 
 ---
 
@@ -73,7 +73,7 @@ Quadrants: `High Power/High Interest`, `High Power/Low Interest`, `Low Power/Hig
 ## Guardrails
 - Emit exactly the three Phase A files above — never bundle Phase B+ content into them.
 - KPIs without a target number and date are rejected by the linter.
-- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-a-vision/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`) and embedded as exported SVGs in the owning document (C4/Structurizr DSL) — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate syntax to the `structurizr-dsl` skill and hierarchy checks to the `c4-model` skill.
+- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-a-vision/<view>.<type>.json`), rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---
@@ -87,4 +87,4 @@ Quadrants: `High Power/High Interest`, `High Power/Low Interest`, `Low Power/Hig
 ## References & Standards
 - **TOGAF ADM Phase A**: [QualiWare TOGAF Architectural Artifacts](https://coe.qualiware.com/resources/togaf/9-1/part4-contentframework/architectural-artifacts/) | [TOGAF 9.1 Pocket Guide (G117)](https://e-serkom-ng.co.id/assets/uploads/skema/benchmark/e68f6-togaf-9.1-book-pocket-guide-g117.pdf) | [The Open Group TOGAF Standard](https://www.opengroup.org/togaf)
 - **Open Agent Skills Specification**: [agentskills.io/specification](https://agentskills.io/specification)
-- **Modeling Standard**: [C4 Model](https://c4model.com/) | [Structurizr DSL](https://docs.structurizr.com/dsl) | [Why Models as Code?](https://docs.structurizr.com/as-code)
+- **Modeling Standard**: [C4 Model](https://c4model.com/) | [archify Toolchain (vendored)](.agents/skills/archify/SKILL.md) | [Archify Spec Policy (TOGAF)](.agents/skills/archify-spec/SKILL.md)

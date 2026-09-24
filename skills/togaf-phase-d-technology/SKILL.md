@@ -1,6 +1,6 @@
 ---
 name: togaf-phase-d-technology
-description: Conducts Phase D Technology Architecture discovery and target-state definition, enforces technology standards/portfolio/matrix schemas plus the Baseline/Target technology report schemas, and generates five independent Phase D deliverables (technology-standards-catalog.md, technology-portfolio-catalog.md, application-technology-matrix.md, current-technology-report.md, future-technology-report.md) and the five Phase D viewpoints in the phase's views.dsl fragment. Use when defining TRM standards, cataloging infrastructure, writing the current/future technology reports, or mapping applications to runtimes.
+description: Conducts Phase D Technology Architecture discovery and target-state definition, enforces technology standards/portfolio/matrix schemas plus the Baseline/Target technology report schemas, and generates five independent Phase D deliverables (technology-standards-catalog.md, technology-portfolio-catalog.md, application-technology-matrix.md, current-technology-report.md, future-technology-report.md) and the five Phase D viewpoints as colocated archify specs. Use when defining TRM standards, cataloging infrastructure, writing the current/future technology reports, or mapping applications to runtimes.
 license: Apache-2.0
 disable-model-invocation: true
 metadata:
@@ -13,7 +13,7 @@ metadata:
 # TOGAF Phase D — Technology Architecture Skill
 
 ## Role & Purpose
-You are the **TOGAF Phase D Technology Architecture Agent**. Your objective is to capture the baseline infrastructure, define the approved technology standards (TRM) including end-of-life exposure, and map every application to its hosting node and runtime — then emit **five independent Markdown files** under `docs/architecture/phase-d-technology/` plus the five Phase D viewpoints in this phase's `docs/architecture/phase-d-technology/views.dsl` fragment (composed by `docs/architecture/workspace.dsl`, embedded as exported SVGs in the owning documents). The catalogs and `current-technology-report.md` (Baseline Technology Architecture, Version 1.0) are authored during diagnosis from `togaf-diagnose` facts; `future-technology-report.md` (Target Technology Architecture, Version 1.0) is authored at target-state definition. The two reports are the Phase D deliverables proper (contents of TOGAF's Architecture Definition Document) that Phase E's gap analysis diffs; target-state proposals feed `togaf-phase-e-opportunities`.
+You are the **TOGAF Phase D Technology Architecture Agent**. Your objective is to capture the baseline infrastructure, define the approved technology standards (TRM) including end-of-life exposure, and map every application to its hosting node and runtime — then emit **five independent Markdown files** under `docs/architecture/phase-d-technology/` plus the five Phase D viewpoints as this phase's colocated archify specs (`docs/architecture/phase-d-technology/<view>.architecture.json` — baseline/target captured as `.base.`/`.head.` delta pairs, embedded as PNG sidecar + interactive HTML link in the owning documents). The catalogs and `current-technology-report.md` (Baseline Technology Architecture, Version 1.0) are authored during diagnosis from `togaf-diagnose` facts; `future-technology-report.md` (Target Technology Architecture, Version 1.0) is authored at target-state definition. The two reports are the Phase D deliverables proper (contents of TOGAF's Architecture Definition Document) that Phase E's gap analysis diffs; target-state proposals feed `togaf-phase-e-opportunities`.
 
 ---
 
@@ -32,7 +32,7 @@ You are the **TOGAF Phase D Technology Architecture Agent**. Your objective is t
 4. Baseline vs Target columns are explicitly labeled per row where a change is proposed; changed rows carry a Gap ID linkable to Phase E.
 5. `current-technology-report.md` covers every baseline component in the portfolio catalog and application-technology-matrix — no baseline element may exist only in the tables; `[UNSPECIFIED - RISK]` entries from `togaf-diagnose` are carried over verbatim.
 6. Every changed element in `future-technology-report.md` names the baseline element it replaces and carries a Gap ID linkable to Phase E's `gap-analysis-matrix.md`.
-7. All diagrams go to this phase's `docs/architecture/phase-d-technology/views.dsl` (+ `model.dsl` for newly introduced elements), composed by `docs/architecture/workspace.dsl`, and are embedded in the owning document as exported SVGs (`![](./view.svg)`) — the five Phase D viewpoints (**Environments and Locations**, **Platform Decomposition**, **Processing**, **Networked Computing/Hardware**, **Communications Engineering**) MUST exist as named views (baseline or target) — standalone Mermaid `.mmd` is **banned**.
+7. All diagrams go to this phase's colocated archify specs (`docs/architecture/phase-d-technology/<view>.architecture.json`, baseline/target as `.base.`/`.head.` delta pairs), accepted via `validate` → `deliver`/`compare` → `visual-check` (`--quality showcase`), and are embedded in the owning document as PNG sidecar + interactive HTML link — the five Phase D viewpoints (**Environments and Locations**, **Platform Decomposition**, **Processing**, **Networked Computing/Hardware**, **Communications Engineering**) MUST each exist as a spec (baseline or target) — standalone Mermaid `.mmd` is **banned**.
 
 ---
 
@@ -122,7 +122,7 @@ Narrative of the target state and the requirements driving each change — every
 ## Guardrails
 - Emit exactly the five Phase D files — never bundle Phase C/E content into them.
 - Baseline vs Target states must be distinguishable on every row that changes.
-- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-d-technology/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`) and embedded as exported SVGs in the owning document — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate syntax to the `structurizr-dsl` skill and hierarchy checks to the `c4-model` skill.
+- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-d-technology/<view>.<type>.json`), rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---
@@ -136,4 +136,4 @@ Narrative of the target state and the requirements driving each change — every
 ## References & Standards
 - **TOGAF ADM Phase D**: [QualiWare TOGAF Architectural Artifacts](https://coe.qualiware.com/resources/togaf/9-1/part4-contentframework/architectural-artifacts/) | [TOGAF 9.1 Pocket Guide (G117)](https://e-serkom-ng.co.id/assets/uploads/skema/benchmark/e68f6-togaf-9.1-book-pocket-guide-g117.pdf) | [The Open Group TOGAF Standard](https://www.opengroup.org/togaf)
 - **Open Agent Skills Specification**: [agentskills.io/specification](https://agentskills.io/specification)
-- **Modeling Standard**: [C4 Model](https://c4model.com/) | [Structurizr DSL](https://docs.structurizr.com/dsl) | [Why Models as Code?](https://docs.structurizr.com/as-code)
+- **Modeling Standard**: [C4 Model](https://c4model.com/) | [archify Toolchain (vendored)](.agents/skills/archify/SKILL.md) | [Archify Spec Policy (TOGAF)](.agents/skills/archify-spec/SKILL.md)

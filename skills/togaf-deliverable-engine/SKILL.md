@@ -1,6 +1,6 @@
 ---
 name: togaf-deliverable-engine
-description: Writing quality enforcement skill that composes and audits TOGAF ADM deliverables against the Content Metamodel (Catalogs, Matrices, Diagrams), enforcing no vague placeholders, complete table columns, valid Structurizr DSL syntax, and explicit data provenance. Use when generating or validating any TOGAF deliverable document.
+description: Writing quality enforcement skill that composes and audits TOGAF ADM deliverables against the Content Metamodel (Catalogs, Matrices, Diagrams), enforcing no vague placeholders, complete table columns, valid archify JSON specs, and explicit data provenance. Use when generating or validating any TOGAF deliverable document.
 license: Apache-2.0
 metadata:
   author: R42 Architecture
@@ -16,7 +16,7 @@ You are the **TOGAF Deliverable Engine & Quality Enforcement Skill**. Your purpo
 You ensure that every TOGAF ADM artifact satisfies the **TOGAF Content Metamodel** by incorporating its three foundational representations:
 1.  **Catalogs**: Structured Markdown tables containing discrete Building Blocks.
 2.  **Matrices**: Cross-domain relationship and mapping tables.
-3.  **Diagrams**: Text-based visual models authored exclusively in Structurizr DSL fragments composed into `docs/architecture/workspace.dsl`, validated against C4 abstraction rules, rendered as exported SVGs embedded in the owning document.
+3.  **Diagrams**: Text-based visual models authored exclusively as **archify JSON specs** colocated with the document (`docs/architecture/phase-<x>/<view>.<type>.json`), validated with `archify validate --quality showcase`, rendered via `deliver` + `visual-check`, and embedded in the owning document as a PNG sidecar plus an interactive HTML link.
 
 ---
 
@@ -40,7 +40,7 @@ Every generated deliverable document MUST adhere to this tripartite structure:
 [Markdown Table format displaying cross-domain mappings, e.g., Application-to-Function, Technology-to-Application]
 
 ## 3. Architecture Diagrams (Text-Based Models)
-[Embedded exported SVG rendering the structural view, e.g. ![Containers](./containers.svg), plus a relative link to the owning views.dsl fragment (and/or an embedded Structurizr DSL code block for preview-poor platforms)]
+[Embedded PNG sidecar rendering the structural view, e.g. ![Containers](./containers.architecture.visual-check.1440x900.light.png), plus a relative link to the interactive HTML artifact and the owning JSON spec (see the Markdown Embed Contract in the archify-spec skill)]
 
 ## 4. Requirements & Traceability Mapping
 [Mapping of artifacts back to Architecture Requirements Specification]
@@ -59,10 +59,10 @@ Before approving or rendering any deliverable file, run this mandatory validatio
 ### Rule 2: Complete Column Properties
 *   Every table row MUST have all columns populated. Unique IDs (e.g., `APP-01`, `CAP-04`, `REQ-12`) are mandatory for traceability.
 
-### Rule 3: Valid Structurizr DSL Syntax
-*   Architectural diagrams MUST be authored in Structurizr DSL — in this document's phase `model.dsl` / `views.dsl` fragments composed by `docs/architecture/workspace.dsl` — standalone Mermaid/PlantUML/ad-hoc diagramming (`.mmd` files) is **banned** for primary architectural definitions.
-*   Structurizr DSL must compile cleanly via the Structurizr `export` command (e.g. `export -workspace docs/architecture/workspace.dsl -format json`): no floating containers, no missing technology annotations, and every relationship labeled with purpose and protocol.
-*   Delegate DSL syntax generation to the `structurizr-dsl` skill and C4 hierarchy validation to the `c4-model` skill. Both are private (`disable-model-invocation: true`) — not in the consumer's skill list and not invocable through the Skill tool, so read them directly from disk (`.agents/skills/structurizr-dsl/SKILL.md`, `.agents/skills/c4-model/SKILL.md`, relative to the project root) and apply their instructions inline.
+### Rule 3: Valid archify Spec
+*   Architectural diagrams MUST be authored as archify JSON specs colocated with this document (`docs/architecture/phase-<x>/<view>.<type>.json`) — standalone Mermaid/PlantUML/ad-hoc diagramming (`.mmd` files) is **banned** for primary architectural definitions.
+*   Every spec must pass `node .agents/skills/archify/bin/archify.mjs validate <type> <spec> --quality showcase --json` cleanly: all 9 artifact checks, 0 composition errors, 0 warnings — no floating components, no missing technology annotations, and every connection labeled with purpose (and protocol for interfaces).
+*   Delegate authoring policy to the `archify-spec` skill and C4 hierarchy validation to the `c4-model` skill. Both are private (`disable-model-invocation: true`) — not in the consumer's skill list and not invocable through the Skill tool, so read them directly from disk (`.agents/skills/archify-spec/SKILL.md`, `.agents/skills/c4-model/SKILL.md`, relative to the project root) and apply their instructions inline. The toolchain itself is vendored at `.agents/skills/archify/`.
 
 ### Rule 4: Explicit Data Provenance & Owners
 *   Every data entity in a catalog MUST list an explicit owning Application / Component (System of Record write owner).
@@ -86,57 +86,59 @@ Before approving or rendering any deliverable file, run this mandatory validatio
 | Inventory Audit | Legacy ERP | COBOL / Mainframe | Deprecated | GAP-APP-02 |
 ```
 
-### Standard Diagram Template (Per-Phase Fragment + SVG Embed)
+### Standard Diagram Template (Colocated archify Spec + PNG Embed)
 
-Author the diagram as two colocated fragments, register them in the root workspace, then embed the exported SVG in this document.
+Author the diagram as one self-contained JSON spec colocated with this document, run the acceptance pipeline, then embed the generated PNG and interactive HTML link.
 
-`docs/architecture/phase-[x]*/model.dsl` (bare statements — no `workspace`/`model`/`views` wrapper):
-```structurizr
-user = person "User" "Primary actor"
-sys = softwareSystem "Enterprise System" {
-    webApp = container "Core Web App" "Delivers client UX" "React / TypeScript"
-    api = container "API Gateway" "Routes & authenticates requests" "Go / Envoy"
-    db = container "Database" "Stores core domain entities" "PostgreSQL 15"
-}
-user -> webApp "Uses" "HTTPS"
-webApp -> api "Calls" "HTTPS/JSON"
-api -> db "Reads/Writes" "SQL / TCP 5432"
-```
-
-`docs/architecture/phase-[x]*/views.dsl` (bare view statements):
-```structurizr
-container sys "Containers" {
-    include *
-    autolayout lr
-}
-```
-
-`docs/architecture/workspace.dsl` (root — add one include line per block per phase):
-```structurizr
-workspace "Enterprise Architecture" "Composed from per-phase fragments via !include" {
-    model {
-        !include shared/model.dsl
-        !include phase-[x]*/model.dsl
-    }
-    views {
-        !include phase-[x]*/views.dsl
-    }
+`docs/architecture/phase-[x]*/containers.architecture.json` (spec — source of truth):
+```json
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Enterprise System — Containers",
+    "output": "containers.architecture.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    { "id": "user", "type": "external", "label": "User", "sublabel": "Primary actor", "pos": [40, 200], "size": [130, 60] },
+    { "id": "webapp", "type": "frontend", "label": "Core Web App", "sublabel": "React / TypeScript", "pos": [280, 90], "size": [150, 64] },
+    { "id": "api", "type": "backend", "label": "API Gateway", "sublabel": "Go / Envoy", "pos": [280, 240], "size": [150, 64] },
+    { "id": "db", "type": "database", "label": "Database", "sublabel": "PostgreSQL 15", "pos": [540, 240], "size": [140, 64] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Enterprise System", "wraps": ["webapp", "api", "db"] }
+  ],
+  "connections": [
+    { "id": "user-webapp", "from": "user", "to": "webapp", "label": "HTTPS" },
+    { "id": "webapp-api", "from": "webapp", "to": "api", "label": "HTTPS/JSON" },
+    { "id": "api-db", "from": "api", "to": "db", "label": "SQL / TCP 5432" }
+  ]
 }
 ```
 
-Embed the exported SVG in this document:
+Acceptance pipeline (run from the project root — validate → deliver → visual-check, in that order):
+```bash
+node .agents/skills/archify/bin/archify.mjs validate architecture docs/architecture/phase-[x]*/containers.architecture.json --quality showcase --json
+node .agents/skills/archify/bin/archify.mjs deliver architecture docs/architecture/phase-[x]*/containers.architecture.json docs/architecture/phase-[x]*/containers.architecture.html --quality showcase --json
+node .agents/skills/archify/bin/archify.mjs visual-check docs/architecture/phase-[x]*/containers.architecture.html --json
+```
+
+Embed the generated PNG sidecar and link the interactive artifact in this document:
 ```markdown
-![Containers](./containers.svg)
+![Containers](./containers.architecture.visual-check.1440x900.light.png)
+[→ Open interactive diagram](./containers.architecture.html)
+[Spec](./containers.architecture.json) · [Evidence](./containers.architecture.visual-check.json)
 ```
 
-(SVG generated via `export -workspace docs/architecture/workspace.dsl -format svg -output docs/architecture/phase-[x]*/` and committed alongside the `.md`.)
+(The `.html`, `.visual-check.*.png` sidecars, and receipt are CLI-generated output, committed alongside the `.md` — never hand-edited. Only run `visual-check` after `deliver` exits 0.)
 
 ---
 
 ## Guardrails
 
 - Every deliverable MUST be an **independent, standalone Markdown file** at its phase-specific path under `docs/architecture/phase-[a-h]-*/` — never bundle multiple deliverables into one file.
-- All architectural visualization definitions are defined in per-phase DSL fragments (`model.dsl` + `views.dsl`) composed by `docs/architecture/workspace.dsl` and embedded as exported SVGs in the owning document (single source of truth). Standalone Mermaid `.mmd` diagrams are **banned**.
+- All architectural visualization definitions are self-contained archify JSON specs (`<view>.<type>.json`) colocated with the owning document, rendered via `deliver` + `visual-check`, and embedded as PNG sidecar + interactive HTML link (single source of truth). Standalone Mermaid `.mmd` diagrams are **banned**.
 - Reject any deliverable whose tables contain empty required cells or placeholder text (Rule 1/2) before it reaches governance review.
 
 ---
@@ -150,7 +152,7 @@ Embed the exported SVG in this document:
 ## References & Standards
 - **Open Agent Skills Specification**: [agentskills.io Specification](https://agentskills.io/specification) | [Agent Skill Folder Structure](https://aiquinta.ai/blog/agent-skill-folder-structure-scripts-resources-assets/)
 - **TOGAF Standard & ADM Content Metamodel**: [The Open Group TOGAF Standard](https://www.opengroup.org/togaf) | [QualiWare TOGAF Architectural Artifacts](https://coe.qualiware.com/resources/togaf/9-1/part4-contentframework/architectural-artifacts/) | [TOGAF 9.1 Pocket Guide (PDF)](https://e-serkom-ng.co.id/assets/uploads/skema/benchmark/e68f6-togaf-9.1-book-pocket-guide-g117.pdf)
-- **Architecture as Code & C4 Modeling**: [Structurizr DSL Specification](https://docs.structurizr.com/dsl) | [Why Models as Code?](https://docs.structurizr.com/as-code) | [C4 Model](https://c4model.com/)
+- **Architecture as Code & C4 Modeling**: [archify Toolchain (vendored)](.agents/skills/archify/SKILL.md) | [Archify Spec Policy (TOGAF)](.agents/skills/archify-spec/SKILL.md) | [C4 Model](https://c4model.com/)
 - **Architectural Decision Records (ADRs)**: [Markdown Architectural Decision Records (MADR)](https://adr.github.io/madr/)
 - **Docs-as-Code & Publishing**: [Backstage TechDocs Architecture](https://backstage.io/docs/features/techdocs/) | [Docusaurus Documentation Engine](https://docusaurus.io/docs)
 - **Governance & EA Practice**: [Visual Paradigm Implementation Governance Model](https://circle.visual-paradigm.com/)

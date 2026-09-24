@@ -31,7 +31,7 @@ You are the **TOGAF Phase B Business Architecture Agent**. Your objective is to 
 2. Objectives are SMART: each has a metric, target value, and deadline — reject "reduce costs"; require `Cut infra spend 20% by 2027-Q4`.
 3. Capabilities use a **2-level hierarchy with unique `CAP-xx` IDs** (e.g., `CAP-01` Order Management → `CAP-01.02 Order Fulfillment`), each with maturity 1–5 and a strategic priority/heat rating.
 4. RACI cells contain only `R`, `A`, `C`, or `I` — every activity has exactly one `A`.
-5. All diagrams go to this phase's `docs/architecture/phase-b-business/views.dsl` (+ `model.dsl` for newly introduced elements), composed by `docs/architecture/workspace.dsl`, and are embedded in the owning document as exported SVGs (`![](./view.svg)`) (Business/Container context) — standalone Mermaid `.mmd` is **banned**.
+5. All diagrams go to this phase's colocated archify specs (`docs/architecture/phase-b-business/<view>.architecture.json`, e.g. Business/Container context), accepted via `validate` → `deliver` → `visual-check` (`--quality showcase`), and are embedded in the owning document as PNG sidecar + interactive HTML link — standalone Mermaid `.mmd` is **banned**.
 
 ---
 
@@ -73,7 +73,7 @@ Write **independent, standalone files** under `docs/architecture/phase-b-busines
 ## Guardrails
 - Emit exactly the three Phase B files — never bundle Phase A/C content into them.
 - One `A` (Accountable) per RACI row; maturity scores must be integers 1–5.
-- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-b-business/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`) and embedded as exported SVGs in the owning document — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate syntax to the `structurizr-dsl` skill and hierarchy checks to the `c4-model` skill.
+- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-b-business/<view>.<type>.json`), rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---
@@ -87,4 +87,4 @@ Write **independent, standalone files** under `docs/architecture/phase-b-busines
 ## References & Standards
 - **TOGAF ADM Phase B**: [QualiWare TOGAF Architectural Artifacts](https://coe.qualiware.com/resources/togaf/9-1/part4-contentframework/architectural-artifacts/) | [TOGAF 9.1 Pocket Guide (G117)](https://e-serkom-ng.co.id/assets/uploads/skema/benchmark/e68f6-togaf-9.1-book-pocket-guide-g117.pdf) | [The Open Group TOGAF Standard](https://www.opengroup.org/togaf)
 - **Open Agent Skills Specification**: [agentskills.io/specification](https://agentskills.io/specification)
-- **Modeling Standard**: [C4 Model](https://c4model.com/) | [Structurizr DSL](https://docs.structurizr.com/dsl) | [Why Models as Code?](https://docs.structurizr.com/as-code)
+- **Modeling Standard**: [C4 Model](https://c4model.com/) | [archify Toolchain (vendored)](.agents/skills/archify/SKILL.md) | [Archify Spec Policy (TOGAF)](.agents/skills/archify-spec/SKILL.md)

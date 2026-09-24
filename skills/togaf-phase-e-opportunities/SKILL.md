@@ -38,7 +38,7 @@ Present work packages to the human architect to refine boundaries/priorities and
 2. Every **Unintentional Gap** has a resolution or escalation note before work packages reference it.
 3. Every work package references concrete **Gap IDs** it resolves (traceability both directions: no orphan gaps, no unreferenced work packages).
 4. Build/buy proposals state alternatives considered and the deciding factor.
-5. Diagrams are this phase's `views.dsl` fragment extensions (composed by `docs/architecture/workspace.dsl`) only — standalone Mermaid `.mmd` is **banned**.
+5. Diagrams are this phase's colocated archify specs (`docs/architecture/phase-e-opportunities/<view>.architecture.json` for target state, `<view>.workflow.json` for sequencing) only — standalone Mermaid `.mmd` is **banned**.
 
 ---
 
@@ -72,7 +72,7 @@ Write **independent, standalone files** under `docs/architecture/phase-e-opportu
 - **TA-1**: quick wins & foundations → **TA-2**: core migration → **Target State** (formalized in `togaf-phase-f-migration`).
 
 ## 4. Target-State Diagram Extension
-Extend this phase's `docs/architecture/phase-e-opportunities/views.dsl` fragment (composed by `docs/architecture/workspace.dsl`, embedded as exported SVGs) with target-state container views — delegate DSL syntax to the `structurizr-dsl` skill and hierarchy checks to the `c4-model` skill.
+Author target-state container views as this phase's colocated archify specs (`docs/architecture/phase-e-opportunities/<view>.architecture.json`, rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link) — delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
 ```
 
 ---
@@ -81,7 +81,7 @@ Extend this phase's `docs/architecture/phase-e-opportunities/views.dsl` fragment
 - Emit exactly the two Phase E files — Transition Architecture detail belongs to `togaf-phase-f-migration`.
 - **No big-bang**: proposals must contain at least one intermediate Transition Architecture sketch.
 - **Traceability**: every work package cites Gap IDs; every unintentional gap is resolved or escalated.
-- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-e-opportunities/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`) and embedded as exported SVGs in the owning document (`![](./view.svg)`) — standalone Mermaid (`.mmd`) diagrams are **banned**.
+- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-e-opportunities/<view>.<type>.json`), rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---
@@ -95,4 +95,4 @@ Extend this phase's `docs/architecture/phase-e-opportunities/views.dsl` fragment
 ## References & Standards
 - **TOGAF ADM Phase E & Gap Analysis**: [QualiWare TOGAF Architectural Artifacts](https://coe.qualiware.com/resources/togaf/9-1/part4-contentframework/architectural-artifacts/) | [TOGAF 9.1 Pocket Guide (G117)](https://e-serkom-ng.co.id/assets/uploads/skema/benchmark/e68f6-togaf-9.1-book-pocket-guide-g117.pdf) (Implementation Factor Assessment & Deduction Matrix, Consolidated Gaps/Solutions/Dependencies Matrix, Business Value Assessment) | [The Open Group TOGAF Standard](https://www.opengroup.org/togaf)
 - **Open Agent Skills Specification**: [agentskills.io/specification](https://agentskills.io/specification)
-- **Modeling Standard**: [C4 Model](https://c4model.com/) | [Structurizr DSL](https://docs.structurizr.com/dsl) | [Why Models as Code?](https://docs.structurizr.com/as-code)
+- **Modeling Standard**: [C4 Model](https://c4model.com/) | [archify Toolchain (vendored)](.agents/skills/archify/SKILL.md) | [Archify Spec Policy (TOGAF)](.agents/skills/archify-spec/SKILL.md)

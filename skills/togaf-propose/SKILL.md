@@ -21,7 +21,7 @@ You are the **TOGAF Propose Agent**, the pipeline stage between `togaf-evaluate`
 | Target technology state narrative (Target Architecture Description) | `togaf-phase-d-technology` | `docs/architecture/phase-d-technology/future-technology-report.md` |
 | Work package catalog, gap closure mapping | `togaf-phase-e-opportunities` | `docs/architecture/phase-e-opportunities/gap-analysis-matrix.md` |
 | Proposal, Build/Buy/OSS decisions, TA sketch | `togaf-phase-e-opportunities` | `docs/architecture/phase-e-opportunities/target-architecture-proposal.md` |
-| Target-state views | `structurizr-dsl` + `c4-model` | `docs/architecture/phase-e-opportunities/views.dsl` (composed by `docs/architecture/workspace.dsl`) |
+| Target-state views | `archify-spec` + `c4-model` | `docs/architecture/phase-e-opportunities/<view>.architecture.json` (colocated spec, no root workspace) |
 
 > **Private skills are loaded by file path**: the phase skills and the modeling standards carry `disable-model-invocation: true` — they are not in the consumer's skill list and cannot be invoked through the Skill tool. To delegate, read the skill directly from disk (e.g., `.agents/skills/togaf-phase-e-opportunities/SKILL.md`, relative to the project root) and apply its instructions inline.
 
@@ -60,7 +60,7 @@ Present candidate Work Packages and Transition Architectures to the human archit
 - `docs/architecture/phase-d-technology/future-technology-report.md` (Target Technology Architecture)
 - `docs/architecture/phase-e-opportunities/gap-analysis-matrix.md`
 - `docs/architecture/phase-e-opportunities/target-architecture-proposal.md`
-- `docs/architecture/phase-e-opportunities/views.dsl` (target-state container view fragment, composed by `docs/architecture/workspace.dsl`)
+- `docs/architecture/phase-e-opportunities/<view>.architecture.json` (target-state container view spec — colocated with the proposal; `.html` + `.visual-check.*.png` generated beside it)
 
 ---
 
@@ -68,7 +68,7 @@ Present candidate Work Packages and Transition Architectures to the human archit
 - **No Big-Bang Mandates**: always structure proposals with at least one intermediate Transition Architecture.
 - **Traceability**: every Work Package MUST reference the specific Gap IDs from the `togaf-evaluate` output it resolves; TAs MUST reference the WP IDs they scope.
 - **File Independence**: never dump proposal content into a monolithic document — each deliverable is an independent Markdown file written by its owning phase skill.
-- **Single Source of Truth**: target-state diagrams are Structurizr DSL extensions in the proposing phase's `views.dsl` fragment composed by `docs/architecture/workspace.dsl` (embedded as exported SVGs in the owning document). Hand-authored Mermaid (`.mmd` or inline blocks) is banned; delegate DSL syntax to `structurizr-dsl` and C4 hierarchy validation to `c4-model`.
+- **Single Source of Truth**: target-state diagrams are colocated archify specs in the proposing phase's directory (`docs/architecture/phase-<x>/<view>.architecture.json`, rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link in the owning document). Hand-authored Mermaid (`.mmd` or inline blocks) is banned; delegate authoring policy to `archify-spec` and C4 hierarchy validation to `c4-model`.
 
 ---
 
@@ -81,6 +81,6 @@ Present candidate Work Packages and Transition Architectures to the human archit
 ## References & Standards
 - **TOGAF Standard & ADM**: [The Open Group TOGAF Standard](https://www.opengroup.org/togaf) | [TOGAF 9.1 Pocket Guide (G117)](https://e-serkom-ng.co.id/assets/uploads/skema/benchmark/e68f6-togaf-9.1-book-pocket-guide-g117.pdf) | [QualiWare TOGAF Content Framework — Architectural Artifacts](https://coe.qualiware.com/resources/togaf/9-1/part4-contentframework/architectural-artifacts/)
 - **Open Agent Skills Specification**: [agentskills.io/specification](https://agentskills.io/specification)
-- **Architecture as Code & C4 Modeling**: [C4 Model](https://c4model.com/) | [Structurizr DSL Specification](https://docs.structurizr.com/dsl) | [Why Models as Code?](https://docs.structurizr.com/as-code)
+- **Architecture as Code & C4 Modeling**: [C4 Model](https://c4model.com/) | [archify Toolchain (vendored)](.agents/skills/archify/SKILL.md) | [Archify Spec Policy (TOGAF)](.agents/skills/archify-spec/SKILL.md)
 - **Architectural Decision Records (ADRs)**: [Markdown Architectural Decision Records (MADR)](https://adr.github.io/madr/)
 - **Governance & EA Practice**: [Visual Paradigm Implementation Governance Model](https://circle.visual-paradigm.com/)

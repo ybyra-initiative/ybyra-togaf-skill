@@ -81,7 +81,7 @@ Write **independent, standalone files** under `docs/architecture/phase-f-migrati
 - Emit exactly the two Phase F files — contracts and harness policies belong to `togaf-phase-g-governance`.
 - **No big-bang**: at least one intermediate Transition Architecture before the target state.
 - Every work package keeps its Gap ID traceability from Phase E through to the TA that delivers it.
-- Architecture visualization is authored only in this phase's DSL fragments (`docs/architecture/phase-f-migration/model.dsl` + `views.dsl`, composed by `docs/architecture/workspace.dsl`, TA views via DSL styles) and embedded as exported SVGs in the owning document (`![](./view.svg)`) — standalone Mermaid (`.mmd`) diagrams are **banned**.
+- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-f-migration/<view>.lifecycle.json` for waves/releases, `<view>.workflow.json` for roadmap/sequencing — TA views captured as ordered states/transitions), rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---
@@ -95,4 +95,4 @@ Write **independent, standalone files** under `docs/architecture/phase-f-migrati
 ## References & Standards
 - **TOGAF ADM Phase F**: [QualiWare TOGAF Architectural Artifacts](https://coe.qualiware.com/resources/togaf/9-1/part4-contentframework/architectural-artifacts/) | [TOGAF 9.1 Pocket Guide (G117)](https://e-serkom-ng.co.id/assets/uploads/skema/benchmark/e68f6-togaf-9.1-book-pocket-guide-g117.pdf) (Transition Architecture State Evolution Table, Consolidated Gaps/Solutions/Dependencies Matrix) | [The Open Group TOGAF Standard](https://www.opengroup.org/togaf)
 - **Open Agent Skills Specification**: [agentskills.io/specification](https://agentskills.io/specification)
-- **Modeling Standard**: [C4 Model](https://c4model.com/) | [Structurizr DSL](https://docs.structurizr.com/dsl) | [Why Models as Code?](https://docs.structurizr.com/as-code)
+- **Modeling Standard**: [C4 Model](https://c4model.com/) | [archify Toolchain (vendored)](.agents/skills/archify/SKILL.md) | [Archify Spec Policy (TOGAF)](.agents/skills/archify-spec/SKILL.md)

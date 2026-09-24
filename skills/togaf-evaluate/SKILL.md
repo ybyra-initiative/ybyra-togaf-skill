@@ -40,7 +40,7 @@ After grilling the architect and capturing operational realities, compile the of
 
 **File ownership**: `togaf-evaluate` compiles the matrix content below; the `togaf-phase-e-opportunities` skill owns writing it to `docs/architecture/phase-e-opportunities/gap-analysis-matrix.md` and validates it against the Phase E schema.
 
-> **Private skills are loaded by file path**: `togaf-phase-e-opportunities`, `structurizr-dsl`, and `c4-model` carry `disable-model-invocation: true` — they are not in the consumer's skill list and cannot be invoked through the Skill tool. To delegate, read the skill directly from disk (e.g., `.agents/skills/togaf-phase-e-opportunities/SKILL.md`, relative to the project root) and apply its instructions inline.
+> **Private skills are loaded by file path**: `togaf-phase-e-opportunities`, `archify-spec`, `archify`, and `c4-model` carry `disable-model-invocation: true` — they are not in the consumer's skill list and cannot be invoked through the Skill tool. To delegate, read the skill directly from disk (e.g., `.agents/skills/togaf-phase-e-opportunities/SKILL.md`, relative to the project root) and apply its instructions inline.
 
 ---
 
@@ -72,7 +72,7 @@ Upon concluding the evaluation, produce the following document:
 ## Guardrails
 - **Direct & Rigorous Tone**: Be direct, analytical, and uncompromising on architectural integrity.
 - **Traceability**: Every gap identified MUST link directly to a component in the Baseline ADD or an explicit business constraint.
-- **C4 + Structurizr DSL Only**: Any diagrammatic evidence MUST be contributed to the evaluated phase's `model.dsl` / `views.dsl` fragments composed by `docs/architecture/workspace.dsl` (plus its root include lines), via the `structurizr-dsl` skill, and embedded as exported SVGs in the owning document. Standalone Mermaid (`.mmd`) diagrams are banned.
+- **C4 + archify Only**: Any diagrammatic evidence MUST be contributed as a colocated archify spec in the evaluated phase's directory (`docs/architecture/phase-<x>/<view>.<type>.json`, authored via the `archify-spec` skill), rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link in the owning document. Standalone Mermaid (`.mmd`) diagrams are banned.
 
 ---
 
@@ -85,7 +85,7 @@ Upon concluding the evaluation, produce the following document:
 ## References & Standards
 - **TOGAF Standard & ADM**: [The Open Group TOGAF Standard](https://www.opengroup.org/togaf) | [TOGAF 9.1 Pocket Guide (G117) — Gap Analysis](https://e-serkom-ng.co.id/assets/uploads/skema/benchmark/e68f6-togaf-9.1-book-pocket-guide-g117.pdf) | [QualiWare TOGAF Content Framework — Architectural Artifacts](https://coe.qualiware.com/resources/togaf/9-1/part4-contentframework/architectural-artifacts/)
 - **Open Agent Skills Specification**: [agentskills.io/specification](https://agentskills.io/specification)
-- **Architecture as Code & C4 Modeling**: [C4 Model](https://c4model.com/) | [Structurizr DSL Specification](https://docs.structurizr.com/dsl) | [Why Models as Code?](https://docs.structurizr.com/as-code)
+- **Architecture as Code & C4 Modeling**: [C4 Model](https://c4model.com/) | [archify Toolchain (vendored)](.agents/skills/archify/SKILL.md) | [Archify Spec Policy (TOGAF)](.agents/skills/archify-spec/SKILL.md)
 - **Architectural Decision Records (ADRs)**: [Markdown Architectural Decision Records (MADR)](https://adr.github.io/madr/)
 - **Docs-as-Code & Publishing**: [Backstage TechDocs Architecture](https://backstage.io/docs/features/techdocs/) | [Docusaurus Documentation Engine](https://docusaurus.io/docs)
 - **Governance & EA Practice**: [Visual Paradigm Implementation Governance Model](https://circle.visual-paradigm.com/)

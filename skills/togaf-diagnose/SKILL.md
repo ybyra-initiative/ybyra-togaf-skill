@@ -51,11 +51,11 @@ Once the Completeness Evaluation Gate passes, do **NOT** output a single monolit
 | C | `togaf-phase-c-information` | `application-portfolio-catalog.md`, `data-entity-catalog.md`, `application-data-crud-matrix.md`, `interface-catalog.md`, `application-interaction-matrix.md` |
 | D | `togaf-phase-d-technology` | `technology-standards-catalog.md`, `technology-portfolio-catalog.md`, `application-technology-matrix.md`, `current-technology-report.md` (the `future-technology-report.md` is authored later, at target-state definition) |
 
-> **Private skills are loaded by file path**: the phase skills and the modeling standards carry `disable-model-invocation: true` — they are not in the consumer's skill list and cannot be invoked through the Skill tool. To delegate, read the skill directly from disk (e.g., `.agents/skills/togaf-phase-a-vision/SKILL.md`, relative to the project root) and apply its instructions inline. The same applies to `structurizr-dsl` and `c4-model`.
+> **Private skills are loaded by file path**: the phase skills and the modeling standards carry `disable-model-invocation: true` — they are not in the consumer's skill list and cannot be invoked through the Skill tool. To delegate, read the skill directly from disk (e.g., `.agents/skills/togaf-phase-a-vision/SKILL.md`, relative to the project root) and apply its instructions inline. The same applies to `archify-spec`, `archify`, and `c4-model`.
 
 Every emitted file MUST pass the `togaf-deliverable-engine` linter (Content Metamodel structure, no vague placeholders, complete columns).
 
-The baseline diagram MUST be generated as the root workspace `docs/architecture/workspace.dsl` (composing `phase-a-vision/model.dsl` + `phase-a-vision/views.dsl` fragments) containing a valid Structurizr DSL workspace with a System Context view, embedded as an exported SVG in the baseline document. Delegate DSL syntax generation to the `structurizr-dsl` skill and C4 hierarchy validation to the `c4-model` skill. Standalone Mermaid (`.mmd`) diagrams are banned.
+The baseline diagram MUST be authored as a colocated archify spec in the baseline document's directory (`docs/architecture/phase-a-vision/system-context.architecture.json`, a System Context view), accepted via `validate` → `deliver` → `visual-check` (`--quality showcase`), and embedded as a PNG sidecar + interactive HTML link. Delegate authoring policy to the `archify-spec` skill and C4 hierarchy validation to the `c4-model` skill; the toolchain is vendored at `.agents/skills/archify/`. Standalone Mermaid (`.mmd`) diagrams are banned.
 
 ---
 
@@ -74,7 +74,7 @@ The baseline diagram MUST be generated as the root workspace `docs/architecture/
 ## References & Standards
 - **TOGAF Standard & ADM**: [The Open Group TOGAF Standard](https://www.opengroup.org/togaf) | [TOGAF 9.1 Pocket Guide (G117)](https://e-serkom-ng.co.id/assets/uploads/skema/benchmark/e68f6-togaf-9.1-book-pocket-guide-g117.pdf) | [QualiWare TOGAF Content Framework — Architectural Artifacts](https://coe.qualiware.com/resources/togaf/9-1/part4-contentframework/architectural-artifacts/)
 - **Open Agent Skills Specification**: [agentskills.io/specification](https://agentskills.io/specification)
-- **Architecture as Code & C4 Modeling**: [C4 Model](https://c4model.com/) | [Structurizr DSL Specification](https://docs.structurizr.com/dsl) | [Why Models as Code?](https://docs.structurizr.com/as-code)
+- **Architecture as Code & C4 Modeling**: [C4 Model](https://c4model.com/) | [archify Toolchain (vendored)](.agents/skills/archify/SKILL.md) | [Archify Spec Policy (TOGAF)](.agents/skills/archify-spec/SKILL.md)
 - **Architectural Decision Records (ADRs)**: [Markdown Architectural Decision Records (MADR)](https://adr.github.io/madr/)
 - **Docs-as-Code & Publishing**: [Backstage TechDocs Architecture](https://backstage.io/docs/features/techdocs/) | [Docusaurus Documentation Engine](https://docusaurus.io/docs)
 - **Governance & EA Practice**: [Visual Paradigm Implementation Governance Model](https://circle.visual-paradigm.com/)
