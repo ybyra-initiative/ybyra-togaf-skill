@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>sane-arch</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body, #root { height: 100%; margin: 0; }
+      body {
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        color: #0f172a;
+        background: #f1f5f9;
+      }
+      .app { display: flex; flex-direction: column; height: 100%; }
+      .app--loading, .app--error { align-items: center; justify-content: center; gap: 8px; }
+      .placeholder { color: #64748b; font-size: 14px; }
+
+      /* toolbar */
+      .toolbar {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 16px; padding: 8px 14px; background: #ffffff;
+        border-bottom: 1px solid #e2e8f0; z-index: 10;
+      }
+      .toolbar__title { display: flex; align-items: center; gap: 10px; min-width: 0; }
+      .toolbar__spec-title { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .toolbar__actions { display: flex; align-items: center; gap: 8px; }
+      .badge {
+        font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+        background: #e0f2fe; color: #075985; border-radius: 999px; padding: 3px 9px;
+      }
+      .pill { font-size: 11px; border-radius: 999px; padding: 3px 9px; }
+      .pill--dirty { background: #fef3c7; color: #92400e; }
+      .button {
+        font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 8px;
+        border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; cursor: pointer;
+      }
+      .button:hover:not(:disabled) { background: #f1f5f9; }
+      .button:disabled { opacity: 0.45; cursor: default; }
+      .button--primary { background: #2563eb; border-color: #2563eb; color: #ffffff; }
+      .button--primary:hover:not(:disabled) { background: #1d4ed8; }
+      .save-status { font-size: 12px; color: #16a34a; min-width: 64px; text-align: right; }
+      .save-status--error { color: #dc2626; }
+
+      /* banners */
+      .banner { padding: 8px 14px; font-size: 13px; }
+      .banner--error { background: #fef2f2; color: #991b1b; border-bottom: 1px solid #fecaca; }
+      .banner--error ul { margin: 4px 0 4px 18px; padding: 0; }
+
+      /* canvas */
+      .canvas { flex: 1; min-height: 0; }
+      .canvas--empty { display: flex; align-items: center; justify-content: center; }
+
+      /* entity nodes */
+      .entity {
+        position: relative; width: 100%; height: 100%;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 2px; padding: 8px 10px; text-align: center;
+        background: #ffffff; border: 2px solid #94a3b8; border-radius: 10px;
+        box-shadow: 0 1px 2px rgb(15 23 42 / 0.08);
+        font-size: 12px; overflow: hidden;
+      }
+      .entity.is-selected { border-color: #2563eb; box-shadow: 0 0 0 2px rgb(37 99 235 / 0.25); }
+      .entity__label { font-weight: 650; line-height: 1.2; }
+      .entity__sublabel { font-size: 11px; color: #64748b; line-height: 1.2; }
+      .entity__tag {
+        position: absolute; top: 4px; right: 6px; font-size: 9px; font-weight: 600;
+        background: #f1f5f9; color: #475569; border-radius: 4px; padding: 1px 5px;
+        max-width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      }
+      .entity--frontend { border-color: #0ea5e9; }
+      .entity--backend { border-color: #22c55e; }
+      .entity--database { border-color: #f59e0b; }
+      .entity--cloud { border-color: #38bdf8; }
+      .entity--security { border-color: #ef4444; }
+      .entity--messagebus { border-color: #a855f7; }
+      .entity--external { border-color: #94a3b8; }
+      .entity--start, .entity--success { border-color: #22c55e; }
+      .entity--failure { border-color: #ef4444; }
+      .entity--waiting { border-color: #f59e0b; }
+      .entity--decision { border-color: #a855f7; }
+      .entity--active { border-color: #2563eb; }
+      .entity--neutral { border-color: #94a3b8; }
+
+      /* bands / chrome */
+      .band {
+        position: relative; width: 100%; height: 100%;
+        border: 1px solid #e2e8f0; border-radius: 10px;
+        background: rgb(248 250 252 / 0.75);
+        font-size: 11px; color: #475569;
+      }
+      .band__label { position: absolute; font-weight: 650; letter-spacing: 0.04em; }
+      .band--lane .band__label {
+        left: 12px; top: 50%; transform: translateY(-50%);
+        text-transform: uppercase; font-size: 11px;
+      }
+      .band--stage .band__label {
+        left: 0; right: 0; top: 8px; text-align: center;
+        text-transform: uppercase; font-size: 11px;
+      }
+      .band--exception { border-style: dashed; background: rgb(254 242 242 / 0.6); }
+      .band--phase { background: rgb(238 242 255 / 0.9); border-color: #c7d2fe; border-radius: 6px; }
+      .band--phase .band__label { left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; }
+      .band--group { background: transparent; border: 1px dashed #cbd5e1; }
+      .band--group .band__label { left: 8px; top: 4px; font-size: 10px; }
+      .band--region { background: rgb(239 246 255 / 0.5); border: 1px dashed #60a5fa; }
+      .band--security-group { background: rgb(254 242 242 / 0.5); border: 1px dashed #f87171; }
+      .band--region .band__label, .band--security-group .band__label {
+        left: 10px; top: 6px; font-weight: 700; text-transform: uppercase; font-size: 10px;
+      }
+      .band--lifeline { background: #94a3b8; border: none; border-radius: 0; }
+      .band--activation { background: #cbd5e1; border: 1px solid #64748b; border-radius: 3px; }
+      .band--segment {
+        background: rgb(241 245 249 / 0.7); border: 1px dashed #e2e8f0; border-radius: 0;
+      }
+      .band--segment .band__label {
+        right: 10px; top: 50%; transform: translateY(-50%);
+        font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+      }
+
+      /* edges */
+      .spec-edge__label-bg { fill: rgb(255 255 255 / 0.92); stroke: #e2e8f0; stroke-width: 1; }
+      .spec-edge__label { font-size: 11px; fill: #334155; paint-order: stroke; }
+
+      /* react-flow polish */
+      .react-flow__node { border-radius: 10px; }
+      .react-flow__node-entity, .react-flow__node-band { background: transparent; border: none; box-shadow: none; }
+      .react-flow__handle.entity-handle { opacity: 0; pointer-events: none; }
+      .react-flow__controls { box-shadow: 0 1px 3px rgb(15 23 42 / 0.12); border-radius: 8px; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

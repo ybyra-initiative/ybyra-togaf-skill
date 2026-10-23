@@ -64,15 +64,17 @@ Write **independent, standalone files** under `docs/architecture/phase-e-opportu
 - **Key Business Outcomes & Value Proposition**: [Quantified KPIs from Phase A]
 
 ## 2. Work Package Catalog
-| WP ID | Name | Addressed Gap IDs | Scope & Deliverables | Build / Buy / OSS Decision & Rationale | Estimated Impact / Value |
-|---|---|---|---|---|---|
-| WP-01 | API Platform Setup | GAP-02, GAP-05 | Deploy API Gateway & Auth | Buy (Kong Gateway) — 6-month time-to-value beats build | High / Enables integration |
+### WP-01 — API Platform Setup
+- **Addressed gaps**: GAP-02, GAP-05
+- **Scope & deliverables**: Deploy API Gateway & Auth
+- **Decision**: Buy (Kong Gateway) — 6-month time-to-value beats build
+- **Estimated impact / value**: High / Enables integration
 
 ## 3. Transition Architecture Sketch
 - **TA-1**: quick wins & foundations → **TA-2**: core migration → **Target State** (formalized in `togaf-phase-f-migration`).
 
 ## 4. Target-State Diagram Extension
-Author target-state container views as this phase's colocated archify specs (`docs/architecture/phase-e-opportunities/<view>.architecture.json`, rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link) — delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
+Author target-state container views as this phase's colocated archify specs (`docs/architecture/phase-e-opportunities/<view>.architecture.json`), accepted via `node .agents/skills/sane-arch/cli.js validate <spec>` and embedded per the Markdown Embed Contract (PNG via `sane-arch export` + spec link + refresh command) — delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
 ```
 
 ---
@@ -81,7 +83,7 @@ Author target-state container views as this phase's colocated archify specs (`do
 - Emit exactly the two Phase E files — Transition Architecture detail belongs to `togaf-phase-f-migration`.
 - **No big-bang**: proposals must contain at least one intermediate Transition Architecture sketch.
 - **Traceability**: every work package cites Gap IDs; every unintentional gap is resolved or escalated.
-- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-e-opportunities/<view>.<type>.json`), rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
+- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-e-opportunities/<view>.<type>.json`), validated and PNG-exported via the `sane-arch` CLI (`.agents/skills/sane-arch/cli.js`) and embedded per the Markdown Embed Contract — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---

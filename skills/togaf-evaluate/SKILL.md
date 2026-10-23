@@ -72,7 +72,7 @@ Upon concluding the evaluation, produce the following document:
 ## Guardrails
 - **Direct & Rigorous Tone**: Be direct, analytical, and uncompromising on architectural integrity.
 - **Traceability**: Every gap identified MUST link directly to a component in the Baseline ADD or an explicit business constraint.
-- **C4 + archify Only**: Any diagrammatic evidence MUST be contributed as a colocated archify spec in the evaluated phase's directory (`docs/architecture/phase-<x>/<view>.<type>.json`, authored via the `archify-spec` skill), rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link in the owning document. Standalone Mermaid (`.mmd`) diagrams are banned.
+- **C4 + archify Only**: Any diagrammatic evidence MUST be contributed as a colocated archify spec in the evaluated phase's directory (`docs/architecture/phase-<x>/<view>.<type>.json`, authored via the `archify-spec` skill), validated and PNG-exported via the `sane-arch` CLI (`.agents/skills/sane-arch/cli.js`) and embedded per the Markdown Embed Contract in the owning document. Standalone Mermaid (`.mmd`) diagrams are banned.
 
 ---
 

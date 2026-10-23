@@ -32,7 +32,7 @@ You are the **TOGAF Phase C Information Systems Architecture Agent**. Your objec
 3. Every CRUD matrix cell is `C`, `R`, `U`, `D`, or `–`; every entity column has at least one `C` that matches its System of Record — mismatches rejected.
 4. Every interface row has: Endpoint ID, integration pattern (`REST` / `Kafka` / `SFTP` / `gRPC` / etc.), latency SLA, and auth protocol (`OAuth2`, `mTLS`, `AWS SigV4`, …) — reject "various APIs" (Rule 1 of the deliverable-engine).
 5. The application interaction matrix is Source App → Target App, symmetric gaps flagged (A→B exists but B→A missing).
-6. All diagrams go to this phase's colocated archify specs (`docs/architecture/phase-c-information/<view>.dataflow.json` for entity/CRUD views, `<view>.sequence.json` for interfaces), accepted via `validate` → `deliver` → `visual-check` (`--quality showcase`), and are embedded in the owning document as PNG sidecar + interactive HTML link — standalone Mermaid `.mmd` is **banned**.
+6. All diagrams go to this phase's colocated archify specs (`docs/architecture/phase-c-information/<view>.dataflow.json` for entity/CRUD views, `<view>.sequence.json` for interfaces), accepted via `node .agents/skills/sane-arch/cli.js validate <spec>` (content validation only — no geometric repair loop) and embedded per the Markdown Embed Contract (PNG via `sane-arch export` + spec link + refresh command; review via `sane-arch open`) — standalone Mermaid `.mmd` is **banned**.
 
 ---
 
@@ -87,7 +87,7 @@ Reference interface IDs from `interface-catalog.md`; unmatched one-way flows fla
 ## Guardrails
 - Emit exactly the five Phase C files — never bundle Phase B/D content into them.
 - One System of Record write owner per data entity; CRUD Create authority must match the SoR.
-- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-c-information/<view>.<type>.json`), rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
+- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-c-information/<view>.<type>.json`), validated and PNG-exported via the `sane-arch` CLI (`.agents/skills/sane-arch/cli.js`) and embedded per the Markdown Embed Contract — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---

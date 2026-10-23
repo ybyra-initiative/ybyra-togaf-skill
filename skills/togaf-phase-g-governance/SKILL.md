@@ -28,7 +28,7 @@ Generate formal contracts between the Architecture Board and implementation team
 ### Step 2: Harness Uniformization (Mastra / Pi Agent)
 1. Select either **Mastra** or **Pi Agent** as the standard team harness — never both in one project.
 2. Configure automated compliance hooks:
-   - `pre-commit` → `validate_archify_specs` (runs `archify validate <spec> --quality showcase --json` over every `docs/architecture/**/*.json` spec).
+   - `pre-commit` → `validate_archify_specs` (runs `node .agents/skills/sane-arch/cli.js validate <spec>` over every `docs/architecture/**/*.json` spec).
    - `pull_request` → `verify_contract_compliance` (checks PRs against the Architecture Contract).
    - Trigger automated Architecture Compliance Reviews on structural code or infrastructure-as-code changes.
 3. **EA 4.0 Cross-Reference (`togaf-agentic-governance`)**: AI agent harness policies MUST reference the `togaf-agentic-governance` skill so that runtime agent rules bind to the EA 4.0 schemas — the **Policy Engine** (context admissibility and constraint validation), the **Effects Gateway** (impact thresholds), and the **Proof Ledger** (passport schemas), as specified in `agentic-control-plane-spec.md`, `proof-ledger-schema.md`, and `governing-primitives-matrix.md`.
@@ -94,7 +94,7 @@ governance_rules:
 ```
 
 ### CI/CD Compliance Hooks
-- **pre-commit**: `validate_archify_specs` → runs `archify validate ... --quality showcase` (9 artifact checks, 0 errors, 0 warnings) over the colocated specs under `docs/architecture/` (via `.agents/skills/archify/bin/archify.mjs`).
+- **pre-commit**: `validate_archify_specs` → runs `node .agents/skills/sane-arch/cli.js validate <spec>` (0 errors against the archify schemas) over the colocated specs under `docs/architecture/`.
 - **pull_request**: `verify_contract_compliance` → evaluates changes against `architecture-contract.md`.
 ```
 
@@ -103,7 +103,7 @@ governance_rules:
 ## Guardrails
 - Emit exactly the two Phase G files — migration sequencing belongs to `togaf-phase-f-migration`.
 - **Harness uniformity**: do not allow mixing execution frameworks within the same project team.
-- **Contract enforcement**: rules must be explicit and machine-verifiable; the `validate_archify_specs` hook enforces the archify showcase standard (colocated `<view>.<type>.json` specs, artifacts generated via `deliver` + `visual-check`, embedded as PNG sidecar + interactive HTML link) — standalone Mermaid (`.mmd`) diagrams are **banned**.
+- **Contract enforcement**: rules must be explicit and machine-verifiable; the `validate_archify_specs` hook enforces the sane-arch content standard (colocated `<view>.<type>.json` specs validated via `.agents/skills/sane-arch/cli.js`, embedded as PNG exported via `sane-arch export` per the Markdown Embed Contract) — standalone Mermaid (`.mmd`) diagrams are **banned**.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---

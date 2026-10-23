@@ -44,7 +44,7 @@ Generate formal **Architecture Contracts** between the Architecture Board and im
 ### Step 3: Agent Harness Uniformization Rules (Mastra / Pi Agent)
 1. **Uniform Workflow Engine**: select either **Mastra** or **Pi Agent** as the standard team harness; do not mix frameworks within one project team.
 2. **Automated Compliance Hooks**:
-   - `pre-commit` → `validate_archify_specs` (runs `archify validate ... --quality showcase` over `docs/architecture/**/*.json` specs, never Mermaid).
+   - `pre-commit` → `validate_archify_specs` (runs `node .agents/skills/sane-arch/cli.js validate <spec>` over `docs/architecture/**/*.json` specs, never Mermaid).
    - `pull_request` → `verify_contract_compliance` (evaluates PRs against the Architecture Contract).
 
 ### Step 4: Delegate Authoring & Approval Gate
@@ -67,7 +67,7 @@ Generate formal **Architecture Contracts** between the Architecture Board and im
 - **Contract Enforcement**: Architecture Contracts must be explicit, measurable, and machine-verifiable where possible.
 - **Traceability**: every project charter MUST link to approved WP IDs; every contract rule MUST link to a `TS-xx` standard or Gap ID.
 - **File Independence**: each deliverable is an independent Markdown file written by its owning phase skill — no monolithic plan document.
-- **Single Source of Truth**: roadmap and sequencing diagrams are colocated archify specs in the plan phase's directory (`docs/architecture/phase-f-migration/<view>.workflow.json` or `<view>.lifecycle.json`, rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link). Hand-authored Mermaid is banned; delegate authoring policy to `archify-spec` and C4 hierarchy validation to `c4-model`.
+- **Single Source of Truth**: roadmap and sequencing diagrams are colocated archify specs in the plan phase's directory (`docs/architecture/phase-f-migration/<view>.workflow.json` or `<view>.lifecycle.json`, validated and PNG-exported via the `sane-arch` CLI (`.agents/skills/sane-arch/cli.js`) and embedded per the Markdown Embed Contract). Hand-authored Mermaid is banned; delegate authoring policy to `archify-spec` and C4 hierarchy validation to `c4-model`.
 
 ---
 

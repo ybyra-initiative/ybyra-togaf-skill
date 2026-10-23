@@ -60,7 +60,7 @@ Present candidate Work Packages and Transition Architectures to the human archit
 - `docs/architecture/phase-d-technology/future-technology-report.md` (Target Technology Architecture)
 - `docs/architecture/phase-e-opportunities/gap-analysis-matrix.md`
 - `docs/architecture/phase-e-opportunities/target-architecture-proposal.md`
-- `docs/architecture/phase-e-opportunities/<view>.architecture.json` (target-state container view spec — colocated with the proposal; `.html` + `.visual-check.*.png` generated beside it)
+- `docs/architecture/phase-e-opportunities/<view>.architecture.json` (target-state container view spec — colocated with the proposal; `<view>.architecture.png` exported beside it via `sane-arch export`)
 
 ---
 
@@ -68,7 +68,7 @@ Present candidate Work Packages and Transition Architectures to the human archit
 - **No Big-Bang Mandates**: always structure proposals with at least one intermediate Transition Architecture.
 - **Traceability**: every Work Package MUST reference the specific Gap IDs from the `togaf-evaluate` output it resolves; TAs MUST reference the WP IDs they scope.
 - **File Independence**: never dump proposal content into a monolithic document — each deliverable is an independent Markdown file written by its owning phase skill.
-- **Single Source of Truth**: target-state diagrams are colocated archify specs in the proposing phase's directory (`docs/architecture/phase-<x>/<view>.architecture.json`, rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link in the owning document). Hand-authored Mermaid (`.mmd` or inline blocks) is banned; delegate authoring policy to `archify-spec` and C4 hierarchy validation to `c4-model`.
+- **Single Source of Truth**: target-state diagrams are colocated archify specs in the proposing phase's directory (`docs/architecture/phase-<x>/<view>.architecture.json`, validated and PNG-exported via the `sane-arch` CLI (`.agents/skills/sane-arch/cli.js`) and embedded per the Markdown Embed Contract in the owning document). Hand-authored Mermaid (`.mmd` or inline blocks) is banned; delegate authoring policy to `archify-spec` and C4 hierarchy validation to `c4-model`.
 
 ---
 

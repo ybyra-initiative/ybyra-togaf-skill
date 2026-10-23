@@ -1,0 +1,38 @@
+{
+  "name": "sane-arch",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Content-first archify-schema diagram viewer: LLM authors JSON, deterministic hybrid layout (ELK / grid arithmetic), architecture drag + persist.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@statelyai/graph": "^2.4.0",
+    "@xyflow/react": "^12.4.0",
+    "ajv": "^8.17.1",
+    "elkjs": "0.9.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "web-worker": "^1.5.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^22.20.4",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "vitest": "^2.1.8"
+  },
+  "overrides": {
+    "fast-uri": "^3.1.7"
+  }
+}

@@ -81,7 +81,7 @@ Write **independent, standalone files** under `docs/architecture/phase-f-migrati
 - Emit exactly the two Phase F files — contracts and harness policies belong to `togaf-phase-g-governance`.
 - **No big-bang**: at least one intermediate Transition Architecture before the target state.
 - Every work package keeps its Gap ID traceability from Phase E through to the TA that delivers it.
-- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-f-migration/<view>.lifecycle.json` for waves/releases, `<view>.workflow.json` for roadmap/sequencing — TA views captured as ordered states/transitions), rendered via `deliver` + `visual-check` and embedded as PNG sidecar + interactive HTML link — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
+- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-f-migration/<view>.lifecycle.json` for waves/releases, `<view>.workflow.json` for roadmap/sequencing — TA views captured as ordered states/transitions), validated and PNG-exported via the `sane-arch` CLI (`.agents/skills/sane-arch/cli.js`) and embedded per the Markdown Embed Contract — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---

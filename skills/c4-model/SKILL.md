@@ -81,7 +81,7 @@ All C4 definitions are authored as archify JSON specs colocated with each docume
 3. **No Unmodeled Entities**:
    - Every entity in a C4 diagram must trace directly to a building block in the TOGAF Architecture Content Metamodel (Catalogs & Matrices).
 4. **Single Source of Truth**:
-   - All views are generated from archify JSON specs colocated with the owning document (`docs/architecture/phase-<x>/<view>.<type>.json`) via the CLI's `deliver` + `visual-check` — artifacts are generated output, never hand-edited. Hand-authored Mermaid (`.mmd`), PlantUML scripts, or ad-hoc diagram files are **banned**.
+   - All views are generated from archify JSON specs colocated with the owning document (`docs/architecture/phase-<x>/<view>.<type>.json`) via `node .agents/skills/sane-arch/cli.js` (`validate` for acceptance, `export` for the embedded PNG) — artifacts are generated output, never hand-edited. Hand-authored Mermaid (`.mmd`), PlantUML scripts, or ad-hoc diagram files are **banned**.
 
 ---
 

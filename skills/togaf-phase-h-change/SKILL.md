@@ -42,7 +42,7 @@ Compile a clean, self-contained hand-off package for operational teams, executiv
 2. Every **Re-Architecting** row triggers a Request for Architecture Work section — missing RAF rejected.
 3. Compliance audit section lists deployment status, operational health metrics, and active dispensations (or explicit "None").
 4. Repository update log is checklist-complete (baseline ADD, ABBs, lessons learned).
-5. Hand-off references diagrams only via this phase's colocated archify specs (`docs/architecture/phase-h-change/<view>.<type>.json` + generated `.html`/`.visual-check.*` artifacts, embedded as PNG sidecar + interactive HTML link in the owning documents) — standalone Mermaid `.mmd` is **banned**.
+5. Hand-off references diagrams only via this phase's colocated archify specs (`docs/architecture/phase-h-change/<view>.<type>.json`, baseline vs changed state as `.base.`/`.head.` delta pairs — each validated and PNG-exported via `node .agents/skills/sane-arch/cli.js`, embedded per the Markdown Embed Contract in the owning documents) — standalone Mermaid `.mmd` is **banned**.
 
 ---
 
@@ -95,7 +95,7 @@ Write **independent, standalone files** under `docs/architecture/phase-h-change/
 - Emit exactly the two Phase H files — never bundle governance contract content into them.
 - **Clear governance escalation**: never treat a Re-Architecting change as a simple patch; force generation of a new Request for Architecture Work.
 - **Clean hand-off**: all documentation self-contained and formatted for static site rendering.
-- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-h-change/<view>.<type>.json` — baseline vs changed state as `.base.`/`.head.` delta pairs), rendered via `deliver`/`compare` + `visual-check` and embedded as PNG sidecar + interactive HTML link — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
+- Architecture visualization is authored only as this phase's colocated archify specs (`docs/architecture/phase-h-change/<view>.<type>.json` — baseline vs changed state as `.base.`/`.head.` delta pairs), validated and PNG-exported via the `sane-arch` CLI (`.agents/skills/sane-arch/cli.js`) and embedded per the Markdown Embed Contract — standalone Mermaid (`.mmd`) diagrams are **banned**; delegate authoring policy to the `archify-spec` skill and hierarchy checks to the `c4-model` skill.
 - Validate output with the `togaf-deliverable-engine` linter before presenting to the user.
 
 ---

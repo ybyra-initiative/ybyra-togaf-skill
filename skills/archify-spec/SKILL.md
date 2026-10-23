@@ -1,6 +1,6 @@
 ---
 name: archify-spec
-description: TOGAF authoring policy for archify — the exclusive "models as code" language for architecture visualization in TOGAF deliverables. Generates, validates, and delivers typed archify JSON specs colocated with each document, enforcing the Mermaid ban, the phase-to-diagram-type router, the colocated artifact layout, and the validate → deliver → visual-check acceptance contract.
+description: TOGAF authoring policy for archify — the exclusive "models as code" language for architecture visualization in TOGAF deliverables. Authors typed archify JSON specs colocated with each document, enforcing the Mermaid ban, the phase-to-diagram-type router, the colocated artifact layout, and the sane-arch acceptance contract (validate → export → embed, reviewed via sane-arch open).
 license: Apache-2.0
 disable-model-invocation: true
 metadata:
@@ -16,9 +16,9 @@ metadata:
 
 You are the **Archify Spec Skill**. Your purpose is to author and accept architecture visualization for TOGAF deliverables as **typed archify JSON specifications** — the exclusive "models as code" language of this pack.
 
-Archify enforces a **"Models as Code"** approach — each view is a small, typed, self-contained JSON spec validated against a JSON Schema, rendered deterministically (no layout engine decisions at authoring time) into a self-contained interactive HTML artifact, with screenshot sidecars as machine-generated evidence. This makes the model version-control friendly, diffable, and machine-validatable — essential properties when AI agents co-author architecture — while keeping each document's diagrams owned by and rendered inside that document.
+Archify enforces a **"Models as Code"** approach — each view is a small, typed, self-contained JSON spec validated against a JSON Schema, rendered deterministically (layout is the renderer's job, never authored geometry) into an exported PNG embed with the spec as machine-readable source. This makes the model version-control friendly, diffable, and machine-validatable — essential properties when AI agents co-author architecture — while keeping each document's diagrams owned by and rendered inside that document.
 
-**The vendored toolchain is the authority.** It ships inside this pack at `.agents/skills/archify/` (schemas, examples, CLI, renderer, checkers). Before authoring, read `.agents/skills/archify/SKILL.md`, the matching schema in `.agents/skills/archify/schemas/`, and one matching example in `.agents/skills/archify/examples/`. This skill carries only the TOGAF policy layer on top: which diagram type to use, where artifacts live, who owns them, and what acceptance means.
+**The vendored toolchain is the authority.** It ships inside this pack at `.agents/skills/archify/` (schemas, examples, CLI, renderer, checkers), and acceptance/rendering run through the `sane-arch` CLI at `.agents/skills/sane-arch/cli.js`. Before authoring, read `.agents/skills/archify/SKILL.md`, the matching schema in `.agents/skills/archify/schemas/`, and one matching example in `.agents/skills/archify/examples/`. This skill carries only the TOGAF policy layer on top: which diagram type to use, where artifacts live, who owns them, and what acceptance means.
 
 ---
 
@@ -28,7 +28,7 @@ Archify enforces a **"Models as Code"** approach — each view is a small, typed
 > Raw diagramming tools (like Mermaid `.mmd` files, PlantUML drawing scripts, or ad-hoc boxes-and-lines text) do **NOT** maintain a semantic architecture model. They treat diagrams as disconnected graphics, leading to naming drift, missing relationship rules, and broken abstraction hierarchies.
 >
 > 1. **Primary Source of Truth**: ALL architecture visualization definitions MUST be authored as **archify JSON specs** colocated with the owning document (`docs/architecture/phase-<x>/<view>.<type>.json`). Hand-authored `.mmd` files are **banned**.
-> 2. **Render-Only Path**: The `.html` artifact and every `.visual-check.*.png` sidecar MUST be **auto-generated from the spec** via the archify CLI (`deliver` + `visual-check`), never authored or edited by hand — then embedded in the owning Markdown document as a PNG embed plus a relative HTML link (see *Markdown Embed Contract*).
+> 2. **Render-Only Path**: The embedded PNG MUST be **auto-generated from the spec** via `node .agents/skills/sane-arch/cli.js export <spec> --out <view>.<type>.png`, never authored or edited by hand — then embedded in the owning Markdown document as PNG + spec link + refresh command (see *Markdown Embed Contract*).
 
 ---
 
@@ -60,62 +60,55 @@ Each document's diagrams live **next to it** — never in a separate uniform pla
 docs/architecture/phase-a-vision/
 ├── architecture-vision.md                                 # owning document
 ├── system-context.architecture.json                       # SPEC (source of truth)
-├── system-context.architecture.html                       # delivered interactive artifact
-├── system-context.architecture.visual-check.1440x900.light.png   # embed sidecar
-├── system-context.architecture.visual-check.*.png         # remaining evidence sidecars
-├── system-context.architecture.visual-check.json          # evidence receipt
-└── system-context.architecture.visual-check.html          # contact sheet
+└── system-context.architecture.png                        # embed (CLI export output)
 ```
 
-1. **Each spec is self-contained.** There is no root workspace and no `!include` composition — one view, one JSON file, one HTML artifact. Cross-view consistency comes from stable identifiers, not file inclusion.
+1. **Each spec is self-contained.** There is no root workspace and no `!include` composition — one view, one JSON file, one PNG embed. Cross-view consistency comes from stable identifiers, not file inclusion.
 2. **Same element, same identity.** When one real-world element appears in multiple specs, its `id`, `label`, and `type` MUST be identical in every spec. The `.base.` spec of a delta pair is canonical; the `.head.` spec reuses its IDs.
 3. **Fragment ownership survives the migration.** A phase skill may edit only its own phase directory's specs and artifacts — never another phase's files. Cross-phase elements (people, core systems) are repeated with locked IDs, never redefined with different IDs.
-4. **Artifacts are generated, never edited.** The delivered `.html` and all `.visual-check.*` sidecars are CLI output. A passing final validation freezes the candidate — regenerate artifacts only by re-running the CLI; never hand-edit them.
+4. **Artifacts are generated, never edited.** The embedded `.png` is CLI export output. After any spec edit, re-run `validate` and `export`; never hand-edit generated artifacts.
 5. **Code traceability when claims are made.** If the spec asserts repository evidence (`sources[]` paths or `meta.repository`), author and validate from the project root so paths resolve against the real repository.
 
 ---
 
-## Acceptance Contract (validate → deliver → visual-check)
+## Acceptance Contract (validate → export → embed)
 
-Run from the project root. `showcase` is the only acceptance profile for this pack (`meta.quality_profile: "showcase"`, ≤ 12 primary nodes).
-
-```bash
-# 1) Validate after every candidate edit — 9 artifact checks, 0 errors, 0 warnings
-node .agents/skills/archify/bin/archify.mjs validate <type> docs/architecture/phase-<x>/<view>.<type>.json --quality showcase --json
-
-# 2) Deliver — final acceptance; atomic write, SHA-256 receipt
-node .agents/skills/archify/bin/archify.mjs deliver <type> docs/architecture/phase-<x>/<view>.<type>.json docs/architecture/phase-<x>/<view>.<type>.html --quality showcase --json
-
-# 3) Visual evidence — ONLY after deliver exits 0; writes 4 PNG sidecars + receipt
-node .agents/skills/archify/bin/archify.mjs visual-check docs/architecture/phase-<x>/<view>.<type>.html --json
-```
-
-For a delta pair, compare instead of single-type deliver:
+Run from the project root. Acceptance is **content validation only** (ajv against the archify schemas) — never a geometric repair loop. The renderer's deterministic layout (ELK/grid + label de-collision) owns geometry, so there is no `validate → deliver → visual-check` showcase acceptance loop to spend tokens repairing label overlaps.
 
 ```bash
-node .agents/skills/archify/bin/archify.mjs compare architecture <view>.base.architecture.json <view>.head.architecture.json docs/architecture/phase-<x>/<view>.delta.html --quality showcase --json
+# 1) Acceptance — ajv content validation after every edit; exit 1 on failure
+node .agents/skills/sane-arch/cli.js validate docs/architecture/phase-<x>/<view>.<type>.json
+
+# 2) Export the embed PNG — headless render with settle checks, tight clip
+node .agents/skills/sane-arch/cli.js export docs/architecture/phase-<x>/<view>.<type>.json --out docs/architecture/phase-<x>/<view>.<type>.png
+
+# 3) User review — the human runs this to inspect the rendering interactively
+node .agents/skills/sane-arch/cli.js open docs/architecture/phase-<x>/<view>.<type>.json
 ```
+
+For a delta pair, validate and export each side (`.base.` and `.head.`) — the diff view is composed from the two exported PNGs or reviewed side by side.
 
 Rules:
-- **A non-zero exit can never be described as success.** A showcase pass must report all 9 artifact checks with 0 composition errors and 0 warnings; a 4-check receipt is basic validation, never acceptance.
-- Never run `visual-check` after a failed `deliver` — that path still holds the previous trusted artifact, and the check would measure stale output.
-- `visual-check` exit 2 means Chrome/Chromium was unavailable (`browser_evidence: skipped`). Report it truthfully and re-run in a browser-capable context; if no PNG sidecar exists, do not embed a broken image link.
-- `visual_check: passed` requires actually inspecting the rendered artifact — never claim it from a green validation receipt alone.
+- **A non-zero exit can never be described as success.** `validate` must report 0 errors before export and embed.
+- `export` requires Playwright chromium (`npx playwright install chromium` in `.agents/skills/sane-arch/`); if it cannot render, report it truthfully — never embed a stale or broken image link.
+- After any spec edit, re-run `validate` → `export` so the embedded PNG always matches the current spec.
+- Authoring rules that the validator cannot catch (content collisions): **lanes beat groups** — do not add `groups` when lanes carry the same semantics; **keep `tag` ≤ ~18 chars** or fold it into the `sublabel` and widen the node (`width`).
 
 ---
 
 ## Markdown Embed Contract
 
-Embed the PNG sidecar and link the interactive artifact — both render natively in VS Code's Markdown preview and on GitHub, no extension or plugin required:
+The standard embed block is **PNG + source-spec link + refresh command** — it renders natively in VS Code's Markdown preview and on GitHub, no extension or plugin required, and tells any reader exactly how to regenerate it:
 
 ```markdown
-![System Context](./system-context.architecture.visual-check.1440x900.light.png)
-[→ Open interactive diagram](./system-context.architecture.html)
-[Spec](./system-context.architecture.json) · [Evidence](./system-context.architecture.visual-check.json)
+![System Context](./system-context.architecture.png)
+Source spec: [system-context.architecture.json](./system-context.architecture.json)
+Refresh: `node .agents/skills/sane-arch/cli.js export docs/architecture/phase-a-vision/system-context.architecture.json --out docs/architecture/phase-a-vision/system-context.architecture.png`
 ```
 
-- The PNG (`1440x900`, light theme) is the canonical static embed; the HTML is the canonical interactive surface (dark/light themes, guided views, search).
-- All paths are relative and colocated with the owning `.md`. After any spec edit, re-run `deliver` + `visual-check` so the embedded PNG and HTML always match the current spec — embedded images are generated output, never hand-edited.
+- The PNG is the canonical static embed (default `export` output: `<spec>.png` next to the spec, `--scale 2`); interactive review is via `node .agents/skills/sane-arch/cli.js open <spec>`.
+- All paths are relative and colocated with the owning `.md`. After any spec edit, re-run `validate` → `export` so the embedded PNG always matches the current spec — embedded images are generated output, never hand-edited.
+- This block is the standard **§3 (Architecture Diagrams) pattern in every phase deliverable template** — same three lines: image, spec link, refresh command.
 
 ---
 
@@ -128,15 +121,17 @@ Delegate abstraction-level validation to the `c4-model` skill. Quick mapping: C4
 ## Validation & Quality Checklist
 
 Before finalizing any spec:
-- [ ] **Showcase pass**: `validate` reports all 9 artifact checks, 0 errors, 0 warnings (`--quality showcase`).
+- [ ] **Content pass**: `node .agents/skills/sane-arch/cli.js validate <spec>` reports 0 errors.
+- [ ] **Content authoring rules**: no redundant `groups` where lanes carry the semantics; every `tag` ≤ ~18 chars (longer → fold into `sublabel`, widen `width`).
 - [ ] **Exact profile field**: `meta.quality_profile` spelled exactly `"showcase"`; ≤ 12 primary nodes.
 - [ ] **Explicit types**: every component declares a valid `type`; technology/sublabel concrete — no vague placeholders.
 - [ ] **Labeled relationships**: every connection includes a purpose label; protocols named for interfaces.
 - [ ] **Consistent identity**: shared elements keep identical `id`/`label`/`type` across specs; delta `.head.` reuses `.base.` IDs.
-- [ ] **Evidence current**: `deliver` and `visual-check` re-run (exit 0) after the last spec edit; embedded PNG/HTML/receipt match the current spec SHA-256.
+- [ ] **Evidence current**: `export` re-run after the last spec edit; the embedded PNG matches the current spec.
+- [ ] **Visual review done**: the rendered PNG (or `sane-arch open`) was actually inspected — never claim a visual pass from a green `validate` alone.
 - [ ] **Ownership respected**: only this phase's directory was touched; no other phase's specs or artifacts edited.
 - [ ] **No Hand-Authored Mermaid**: no `.mmd` files or inline Mermaid code blocks serve as primary architecture definitions — render-only from the JSON spec.
-- [ ] **No hand-edited artifacts**: `.html` and `.visual-check.*` files are byte-for-byte CLI output.
+- [ ] **No hand-edited artifacts**: the embedded `.png` is byte-for-byte CLI export output.
 
 ---
 

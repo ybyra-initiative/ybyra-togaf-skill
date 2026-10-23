@@ -16,7 +16,7 @@ You are the **TOGAF Deliverable Engine & Quality Enforcement Skill**. Your purpo
 You ensure that every TOGAF ADM artifact satisfies the **TOGAF Content Metamodel** by incorporating its three foundational representations:
 1.  **Catalogs**: Structured Markdown tables containing discrete Building Blocks.
 2.  **Matrices**: Cross-domain relationship and mapping tables.
-3.  **Diagrams**: Text-based visual models authored exclusively as **archify JSON specs** colocated with the document (`docs/architecture/phase-<x>/<view>.<type>.json`), validated with `archify validate --quality showcase`, rendered via `deliver` + `visual-check`, and embedded in the owning document as a PNG sidecar plus an interactive HTML link.
+3.  **Diagrams**: Text-based visual models authored exclusively as **archify JSON specs** colocated with the document (`docs/architecture/phase-<x>/<view>.<type>.json`), accepted via `node .agents/skills/sane-arch/cli.js validate <spec>` (ajv content validation only — never a geometric repair loop), and embedded in the owning document per the Markdown Embed Contract (PNG from `sane-arch export` + spec link + refresh command).
 
 ---
 
@@ -40,11 +40,15 @@ Every generated deliverable document MUST adhere to this tripartite structure:
 [Markdown Table format displaying cross-domain mappings, e.g., Application-to-Function, Technology-to-Application]
 
 ## 3. Architecture Diagrams (Text-Based Models)
-[Embedded PNG sidecar rendering the structural view, e.g. ![Containers](./containers.architecture.visual-check.1440x900.light.png), plus a relative link to the interactive HTML artifact and the owning JSON spec (see the Markdown Embed Contract in the archify-spec skill)]
+![Containers](./containers.architecture.png)
+Source spec: [containers.architecture.json](./containers.architecture.json)
+Refresh: `node .agents/skills/sane-arch/cli.js export docs/architecture/phase-[x]/containers.architecture.json --out docs/architecture/phase-[x]/containers.architecture.png`
 
 ## 4. Requirements & Traceability Mapping
 [Mapping of artifacts back to Architecture Requirements Specification]
 ```
+
+The **§3 pattern is fixed**: image + source-spec link + refresh command — the same three lines in every phase deliverable template (see the Markdown Embed Contract in the `archify-spec` skill).
 
 ---
 
@@ -61,50 +65,66 @@ Before approving or rendering any deliverable file, run this mandatory validatio
 
 ### Rule 3: Valid archify Spec
 *   Architectural diagrams MUST be authored as archify JSON specs colocated with this document (`docs/architecture/phase-<x>/<view>.<type>.json`) — standalone Mermaid/PlantUML/ad-hoc diagramming (`.mmd` files) is **banned** for primary architectural definitions.
-*   Every spec must pass `node .agents/skills/archify/bin/archify.mjs validate <type> <spec> --quality showcase --json` cleanly: all 9 artifact checks, 0 composition errors, 0 warnings — no floating components, no missing technology annotations, and every connection labeled with purpose (and protocol for interfaces).
-*   Delegate authoring policy to the `archify-spec` skill and C4 hierarchy validation to the `c4-model` skill. Both are private (`disable-model-invocation: true`) — not in the consumer's skill list and not invocable through the Skill tool, so read them directly from disk (`.agents/skills/archify-spec/SKILL.md`, `.agents/skills/c4-model/SKILL.md`, relative to the project root) and apply their instructions inline. The toolchain itself is vendored at `.agents/skills/archify/`.
+*   Every spec must pass `node .agents/skills/sane-arch/cli.js validate <spec>` cleanly (0 errors against the archify schemas) and be exported to PNG via `sane-arch export` for embedding. Acceptance is **content validation only** — never a token-spending geometric repair loop; geometry is owned by the deterministic renderer (ELK/grid + label de-collision).
+*   Delegate authoring policy to the `archify-spec` skill and C4 hierarchy validation to the `c4-model` skill. Both are private (`disable-model-invocation: true`) — not in the consumer's skill list and not invocable through the Skill tool, so read them directly from disk (`.agents/skills/archify-spec/SKILL.md`, `.agents/skills/c4-model/SKILL.md`, relative to the project root) and apply their instructions inline. The schemas/toolchain are vendored at `.agents/skills/archify/`; the sane-arch CLI at `.agents/skills/sane-arch/cli.js`.
 
 ### Rule 4: Explicit Data Provenance & Owners
 *   Every data entity in a catalog MUST list an explicit owning Application / Component (System of Record write owner).
+
+### Rule 5: Information Organization (headings first, tables for lookups)
+*   Organize documents **by headings** — one heading per topic (driver, stakeholder, principle, capability group, work package) with a short summary paragraph or a tight 2–3 column field list underneath.
+*   Reserve tables for what is genuinely tabular: small lookup/reference sets (ID ↔ name indexes), matrices/cross-reference grids (CRUD, RACI, interaction), and heat summaries.
+*   **Never express sequential or narrative content in wide row-major tables** (6–7 columns telling a story): sequences (value streams, engagement flows, driver → goal → objective chains) belong in headings + prose/lists plus the diagram. Wide narrative tables render badly in narrow panes and diffs and collapse context into fragments.
 
 ---
 
 ## Template Composers
 
-### Standard Catalog Template
+> **Composition rule**: use headings-first blocks (one heading per topic + tight field list) for narrative/sequential content; the table templates below are for genuinely tabular sets only.
+
+### Standard Catalog Template (lookup tables — genuinely tabular)
 ```markdown
 | Building Block ID | Name | Category / Type | Description | Standards Compliance | Owner |
 |---|---|---|---|---|---|
 | ABB-101 | Authentication Gateway | Application Service | OIDC/OAuth2 Proxy | RFC 6749 | IAM Team |
 ```
 
-### Standard Matrix Template
+### Standard Matrix Template (cross-reference grid — genuinely tabular)
 ```markdown
 | Business Capability | Supporting Application | Technology Stack | Operational Status | Gap Flag |
-|---|---|---|---|---|---|
+|---|---|---|---|---|
 | Order Fulfillment | Order-Svc v2.1 | Node.js / Redis | Operational | None |
 | Inventory Audit | Legacy ERP | COBOL / Mainframe | Deprecated | GAP-APP-02 |
 ```
 
+### Headings-First Topic Template (drivers, stakeholders, principles, work packages)
+```markdown
+### SH-01 — CFO / Sponsor
+- **Power/Interest**: High Power / High Interest
+- **Decision Authority**: Approves budget
+- **Key Concerns**: ROI proof
+- **Engagement Strategy**: Manage closely — monthly KPI review
+```
+
 ### Standard Diagram Template (Colocated archify Spec + PNG Embed)
 
-Author the diagram as one self-contained JSON spec colocated with this document, run the acceptance pipeline, then embed the generated PNG and interactive HTML link.
+Author the diagram as one self-contained JSON spec colocated with this document, run the acceptance pipeline, then embed the standard §3 block.
 
-`docs/architecture/phase-[x]*/containers.architecture.json` (spec — source of truth):
+`docs/architecture/phase-[x]*/containers.architecture.json` (spec — source of truth; geometry is the renderer's job, so `pos` is omitted):
 ```json
 {
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
     "title": "Enterprise System — Containers",
-    "output": "containers.architecture.html",
+    "output": "containers.architecture.png",
     "quality_profile": "showcase"
   },
   "components": [
-    { "id": "user", "type": "external", "label": "User", "sublabel": "Primary actor", "pos": [40, 200], "size": [130, 60] },
-    { "id": "webapp", "type": "frontend", "label": "Core Web App", "sublabel": "React / TypeScript", "pos": [280, 90], "size": [150, 64] },
-    { "id": "api", "type": "backend", "label": "API Gateway", "sublabel": "Go / Envoy", "pos": [280, 240], "size": [150, 64] },
-    { "id": "db", "type": "database", "label": "Database", "sublabel": "PostgreSQL 15", "pos": [540, 240], "size": [140, 64] }
+    { "id": "user", "type": "external", "label": "User", "sublabel": "Primary actor" },
+    { "id": "webapp", "type": "frontend", "label": "Core Web App", "sublabel": "React / TypeScript" },
+    { "id": "api", "type": "backend", "label": "API Gateway", "sublabel": "Go / Envoy" },
+    { "id": "db", "type": "database", "label": "Database", "sublabel": "PostgreSQL 15" }
   ],
   "boundaries": [
     { "kind": "region", "label": "Enterprise System", "wraps": ["webapp", "api", "db"] }
@@ -117,28 +137,28 @@ Author the diagram as one self-contained JSON spec colocated with this document,
 }
 ```
 
-Acceptance pipeline (run from the project root — validate → deliver → visual-check, in that order):
+Acceptance pipeline (run from the project root — validate → export, in that order):
 ```bash
-node .agents/skills/archify/bin/archify.mjs validate architecture docs/architecture/phase-[x]*/containers.architecture.json --quality showcase --json
-node .agents/skills/archify/bin/archify.mjs deliver architecture docs/architecture/phase-[x]*/containers.architecture.json docs/architecture/phase-[x]*/containers.architecture.html --quality showcase --json
-node .agents/skills/archify/bin/archify.mjs visual-check docs/architecture/phase-[x]*/containers.architecture.html --json
+node .agents/skills/sane-arch/cli.js validate docs/architecture/phase-[x]*/containers.architecture.json
+node .agents/skills/sane-arch/cli.js export docs/architecture/phase-[x]*/containers.architecture.json --out docs/architecture/phase-[x]*/containers.architecture.png
 ```
 
-Embed the generated PNG sidecar and link the interactive artifact in this document:
+Embed the standard §3 block in this document:
 ```markdown
-![Containers](./containers.architecture.visual-check.1440x900.light.png)
-[→ Open interactive diagram](./containers.architecture.html)
-[Spec](./containers.architecture.json) · [Evidence](./containers.architecture.visual-check.json)
+![Containers](./containers.architecture.png)
+Source spec: [containers.architecture.json](./containers.architecture.json)
+Refresh: `node .agents/skills/sane-arch/cli.js export docs/architecture/phase-[x]/containers.architecture.json --out docs/architecture/phase-[x]/containers.architecture.png`
 ```
 
-(The `.html`, `.visual-check.*.png` sidecars, and receipt are CLI-generated output, committed alongside the `.md` — never hand-edited. Only run `visual-check` after `deliver` exits 0.)
+(The `.png` is CLI-generated output, committed alongside the `.md` — never hand-edited. The user reviews interactively with `node .agents/skills/sane-arch/cli.js open <spec>`. After any spec edit, re-run `validate` → `export`. `export` requires Playwright chromium — `npx playwright install chromium` in `.agents/skills/sane-arch/`.)
 
 ---
 
 ## Guardrails
 
 - Every deliverable MUST be an **independent, standalone Markdown file** at its phase-specific path under `docs/architecture/phase-[a-h]-*/` — never bundle multiple deliverables into one file.
-- All architectural visualization definitions are self-contained archify JSON specs (`<view>.<type>.json`) colocated with the owning document, rendered via `deliver` + `visual-check`, and embedded as PNG sidecar + interactive HTML link (single source of truth). Standalone Mermaid `.mmd` diagrams are **banned**.
+- All architectural visualization definitions are self-contained archify JSON specs (`<view>.<type>.json`) colocated with the owning document, validated and PNG-exported via the `sane-arch` CLI (`.agents/skills/sane-arch/cli.js`), and embedded per the Markdown Embed Contract — image + spec link + refresh command (single source of truth). Standalone Mermaid `.mmd` diagrams are **banned**.
+- Enforce Rule 5: reject deliverables that express sequential or narrative content in wide row-major tables when a headings-first structure fits.
 - Reject any deliverable whose tables contain empty required cells or placeholder text (Rule 1/2) before it reaches governance review.
 
 ---

@@ -41,7 +41,7 @@ For the full target directory specification, see [directory-spec.md](references/
   - `docs/architecture/phase-d-technology/technology-standards-catalog.md` (target state)
   - `docs/architecture/phase-d-technology/future-technology-report.md` (Target Technology Architecture)
   - `docs/architecture/phase-e-opportunities/target-architecture-proposal.md`
-  - Colocated archify specs + generated artifacts for target-state views (e.g. `docs/architecture/phase-d-technology/<view>.architecture.json` + `.html` + `.visual-check.*.png` sidecars)
+  - Colocated archify specs + exported PNG embeds for target-state views (e.g. `docs/architecture/phase-d-technology/<view>.architecture.json` + `<view>.architecture.png`)
 
 ### Stage 4: Migration & Execution Governance (`togaf-plan` + Phase F + Phase G + EA 4.0 Agentic Governance)
 - **Trigger**: Approval of Target Proposal.
@@ -66,7 +66,7 @@ For the full target directory specification, see [directory-spec.md](references/
 
 ### Cross-Cutting Delegation
 - **Quality Gate (all stages)**: Every emitted deliverable MUST pass the `togaf-deliverable-engine` master schema linter before approval.
-- **Modeling (all stages)**: All diagrams are authored as self-contained archify JSON specs colocated with each phase's documents (`docs/architecture/phase-<x>/<view>.<type>.json`), accepted via `validate` → `deliver` → `visual-check` (`--quality showcase`), and embedded in the owning documents as a PNG sidecar plus an interactive HTML link. Delegate authoring policy to `archify-spec` and C4 hierarchy validation to `c4-model`; the toolchain is vendored at `.agents/skills/archify/`.
+- **Modeling (all stages)**: All diagrams are authored as self-contained archify JSON specs colocated with each phase's documents (`docs/architecture/phase-<x>/<view>.<type>.json`), accepted via `node .agents/skills/sane-arch/cli.js validate <spec>` (ajv content validation only — never a geometric repair loop), and embedded per the Markdown Embed Contract in `archify-spec` (PNG via `sane-arch export` + spec link + refresh command; user reviews via `sane-arch open`). Delegate authoring policy to `archify-spec` and C4 hierarchy validation to `c4-model`; schemas/toolchain are vendored at `.agents/skills/archify/` and the sane-arch CLI at `.agents/skills/sane-arch/cli.js`.
 
 ---
 
@@ -74,7 +74,7 @@ For the full target directory specification, see [directory-spec.md](references/
 1. **File Independence**: Every deliverable MUST be saved as a separate Markdown file in its dedicated phase directory. Never dump multiple phases into a single monolithic document.
 2. **Metadata Frontmatter**: Every file must start with YAML frontmatter specifying document metadata.
 3. **Cross-Referencing**: Files must use relative Markdown links to link across artifacts (e.g., `[Gap Matrix](../phase-e-opportunities/gap-analysis-matrix.md)`).
-4. **C4 + archify Standard**: All architectural diagrams MUST be defined as archify JSON specs colocated with the owning document (one self-contained `<view>.<type>.json` per view — no root workspace, no `!include` composition), validated with `archify validate --quality showcase`, rendered via `deliver` + `visual-check`, and embedded as PNG sidecar + interactive HTML link. Standalone Mermaid/ad-hoc diagramming is banned for primary architectural definitions. Delegate C4 hierarchy validation to the `c4-model` skill and authoring policy to the `archify-spec` skill.
+4. **C4 + archify Standard**: All architectural diagrams MUST be defined as archify JSON specs colocated with the owning document (one self-contained `<view>.<type>.json` per view — no root workspace, no `!include` composition), validated with `node .agents/skills/sane-arch/cli.js validate <spec>`, exported to PNG with `sane-arch export`, and embedded per the Markdown Embed Contract (image + spec link + refresh command). Standalone Mermaid/ad-hoc diagramming is banned for primary architectural definitions. Delegate C4 hierarchy validation to the `c4-model` skill and authoring policy to the `archify-spec` skill.
 
 ---
 

@@ -22,10 +22,14 @@ Ask **1 to 2 questions at a time** using plain, non-jargon language:
 - **Phase A (Vision & Drivers)**:
   - "What is the core problem or new opportunity driving this project?"
   - "Who is paying for or sponsoring this work, and who makes the final call when opinions clash?"
+  - "What does success look like in numbers — and by when? If you don't want to commit to a date or number, say so — we record it as `[UNSPECIFIED - RISK: operator-omitted]` and never invent one."
   - "What are the non-negotiable rules or constraints (e.g., hard budget caps, regulatory compliance, fixed deadlines, required tech)?"
-- **Phase B (Business Capabilities)**:
+- **Phase B (Business Capabilities)** — business first, system second:
+  - "What is the business that produces revenue — who buys, and what exactly is sold?"
+  - "How does one engagement flow end-to-end, from first demand to payment? What role does the software play — a tool, or the product?"
   - "What key activities or functions does your team/company need to perform to operate successfully?"
   - "Who (which teams, roles, or external users) actually carries out each activity?"
+  - Ground answers in published material only (e.g., site content) or the interview; anything else is `[UNSPECIFIED - RISK]` — never infer business facts from architecture docs.
 - **Phase C (Apps & Data)**:
   - "What software applications, tools, or services are in use today?"
   - "What data (e.g., customer profiles, orders, transactions) does each system store or manage?"
@@ -33,6 +37,7 @@ Ask **1 to 2 questions at a time** using plain, non-jargon language:
 - **Phase D (Infrastructure & Tech Stack)**:
   - "Where do these systems run (cloud provider, local servers, SaaS)?"
   - "What languages, frameworks, databases, and operating environments power them?"
+  - "For each claimed platform capability (vector search, FTS, transactions…): does the platform actually support that natively *today*? Verify against the current vendor capability matrix before recording it as a standard — e.g., D1 has no native vector support; the honest options may be a separate vector service or a different store. Record the verification source alongside the standard."
 
 ---
 
@@ -47,7 +52,7 @@ Once the Completeness Evaluation Gate passes, do **NOT** output a single monolit
 | Phase | Owning Skill | Files Written |
 |---|---|---|
 | A | `togaf-phase-a-vision` | `architecture-vision.md`, `stakeholder-actor-map.md`, `principles-catalog.md` |
-| B | `togaf-phase-b-business` | `driver-goal-objective-catalog.md`, `business-capability-catalog.md`, `organization-actor-catalog.md` |
+| B | `togaf-phase-b-business` | `driver-goal-objective-catalog.md`, `business-capability-catalog.md`, `organization-actor-catalog.md`, `engagement-value-stream.md` |
 | C | `togaf-phase-c-information` | `application-portfolio-catalog.md`, `data-entity-catalog.md`, `application-data-crud-matrix.md`, `interface-catalog.md`, `application-interaction-matrix.md` |
 | D | `togaf-phase-d-technology` | `technology-standards-catalog.md`, `technology-portfolio-catalog.md`, `application-technology-matrix.md`, `current-technology-report.md` (the `future-technology-report.md` is authored later, at target-state definition) |
 
@@ -55,7 +60,7 @@ Once the Completeness Evaluation Gate passes, do **NOT** output a single monolit
 
 Every emitted file MUST pass the `togaf-deliverable-engine` linter (Content Metamodel structure, no vague placeholders, complete columns).
 
-The baseline diagram MUST be authored as a colocated archify spec in the baseline document's directory (`docs/architecture/phase-a-vision/system-context.architecture.json`, a System Context view), accepted via `validate` → `deliver` → `visual-check` (`--quality showcase`), and embedded as a PNG sidecar + interactive HTML link. Delegate authoring policy to the `archify-spec` skill and C4 hierarchy validation to the `c4-model` skill; the toolchain is vendored at `.agents/skills/archify/`. Standalone Mermaid (`.mmd`) diagrams are banned.
+The baseline diagram MUST be authored as a colocated archify spec in the baseline document's directory (`docs/architecture/phase-a-vision/system-context.architecture.json`, a System Context view), accepted via `node .agents/skills/sane-arch/cli.js validate <spec>` (ajv content validation only — never a geometric repair loop), exported to PNG via `sane-arch export`, and embedded per the Markdown Embed Contract (image + spec link + refresh command); the user reviews the rendering via `sane-arch open`. Delegate authoring policy to the `archify-spec` skill and C4 hierarchy validation to the `c4-model` skill; the toolchains are vendored at `.agents/skills/archify/` and `.agents/skills/sane-arch/`. Standalone Mermaid (`.mmd`) diagrams are banned.
 
 ---
 

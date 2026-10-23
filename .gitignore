@@ -1,2 +1,5 @@
 .DS_Store
 .trae/
+node_modules/
+skills/sane-arch/test-results/
+skills/sane-arch/playwright-report/
